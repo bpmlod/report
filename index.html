@@ -167,10 +167,20 @@
     <pre class="example highlight">http://example.org#Հայաստան</pre>
     <p>Arguments in favor</p>
     <ul>
+    <li>Less security risks
+	<li>Path more human readable (for a given language)
     </ul>
     
     <p>Arguments against</p>
     <ul>
+    <li>Unreadable for speakers of other languages
+	<li>Problem when the namespace does not end in <code>/</code> 
+	or <code>#</code>. 
+	It may be difficult to see where the term is 
+	(eg.: namespace is <code>http://w3.org/html</code> and full name 
+	is <code>http://w3.org/htmldiv</code>). 
+	One should define prefixes that end 
+	 with <code>/</code> or <code>#</code>
     </ul>
     
     </section>
@@ -182,10 +192,16 @@
     <pre class="example highlight">http://hy.example.org/#Հայաստան</pre>
     <p>Arguments in favor</p>
     <ul>
+    <li>Practical reasons: divide in different datasets, as in DBpedia
     </ul>
     
     <p>Arguments against</p>
     <ul>
+    <li>Where do we put it? (beginning, end, ..)
+	<li>Dialects
+	<li>Actually, "es" in DBpedia uri identifies NOT the language but the source
+	<li>May be technically challenging (requires DNS entry for each language)
+	<li>Confuses server/data distinction
     </ul>
     
     </section>
@@ -200,6 +216,7 @@
     </pre>
     <p>Arguments in favor</p>
     <ul>
+    <li>Compatible with content negotiation
     </ul>
     
     <p>Arguments against</p>
@@ -215,35 +232,59 @@
 
     <section>
     <h2>No language content negotiation</h2>
+    <p>Return always the same triples without taking into account the 
+    HTTP <code>Accept-language</code> header.
     <p>Arguments in favor</p>
     <ul>
+    <li>The user agent gets all the information. 
     </ul>
     
     <p>Arguments against</p>
     <ul>
+    <li>The user agent may get triples with languages 
+        that it is not interested in</li>
     </ul>
     
-        </section>
+    </section>
 
     <section>
     <h2>Language content negotiation</h2>
+    <p>The server attends the language preferences of the user agent, 
+     presented in the <code>Accept-language</code> header and 
+     returns different data for each language preference.
+
     <p>Arguments in favor</p>
     <ul>
+    <li>Save bandwith. The user agent will get only triples adapted
+      to the language preferences that it has presented.
+    <li>
     </ul>
     
     <p>Arguments against</p>
     <ul>
+    <li>The user agent can loose information, specially if there is 
+      multilingual content
     </ul>
     </section>
 
     <section>
     <h2>Language content redirection</h2>
+    <p>The server attends the language preferences of the user agent, 
+      presented in the <code>Accept-language</code> header and 
+      returns a 303 (see also) redirect to a resource with triples 
+      in that language</p>
+      
     <p>Arguments in favor</p>
     <ul>
+    <li>Maintains the difference between the generic representation 
+     of a resource in any language and the representation of that 
+     resource in a given language
     </ul>
     
     <p>Arguments against</p>
     <ul>
+    <li>Not feasible for all the resources to have 
+        representations in different languages.
     </ul>
     </section>
 
