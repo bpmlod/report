@@ -79,7 +79,9 @@
     
     <section>
       <h2>Introduction</h2>
-      <p>This document describes the work done by the Best Practices for Multilingual Linked Open Data.
+      <p>This report describes the work done by the Best Practices for Multilingual Linked Open Data.
+      <p>The goal of the group is to identify common practices and patterns
+       that can be applied to publish linked data in a multilingual context. 
       </p>
    </section>
    
@@ -144,6 +146,9 @@
     <p>This patterns consists of using unrestricted IRIs which can 
        contain Unicode characters outside the ASCII repertoire.</p>
     <pre class="example highlight">http://օրինակ.օրգ/#Հայաստան</pre>
+    
+    <p>IRIs (Internationalized Resource Identifiers) are described in [[RFC3987]]
+     and they are not restricted to ASCII characters.
     
     <p>Arguments in favor</p>
     <ul>
@@ -292,6 +297,34 @@
 
     <section>
     <h2>Textual information</h2>
+    
+    <section>
+    <h2>Label everything</h2>
+    <p>Linked data datasets should provide labels for all 
+      resources: individuals, concepts and properties, 
+      not just the main entities.
+    </p>
+        
+    </section>
+    
+    <section>
+    <h2>Multilingual labels</h2>
+    </section>
+
+    <section>
+    <h2>Labels without language tags</h2>
+    </section>
+
+    <section>
+    <h2>Divide longer descriptions</h2>
+    </section>
+
+    <section>
+    <h2>Provide lexical information</h2>
+    </section>
+
+    <section>
+    <h2>Structured literals</h2>
     </section>
 
     <section>
@@ -317,13 +350,15 @@
 
  <p>A large amount of thanks goes out to the BPMLOD Community Group
     participants who worked through many of the technical issues on the mailing
-    list and the weekly telecons.</p>
+    list and the telecons.</p>
   
   <!-- TODO: maintain this -->
   <p>Thanks to the following individuals, in order of their first name, for
     their input on the specification:
 <!--Dimitris Kontokostas,
-    Sören Auer --> 
+    Elena Montiel,
+    Sören Auer,
+    Tomás Carrasco --> 
     ...here we should include the list of people that contributed
   </p>
 </section>
