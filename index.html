@@ -70,7 +70,7 @@
       <li>More information about meetings of the BPMLOD group can be obtained 
         <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
 
-	  <li><a href="https://github.com/bpmlod/draft">Source code</a> 
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
 	     for this document can be found on Github.</li>
 
       </ul>
@@ -88,16 +88,11 @@
     
     
     <section>
-    
-
-	<h2>Naming and dereferencing</h2>
-
-    <section>
     <h2>Naming</h2>
     
     <section>
     <h2>Descriptive URIs</h2>
-  	<p class="practicedesc">
+  	<p>
     	Descriptive URIs use ASCII characters that are combined to represent 
     	terms or abbreviations of terms in some natural language. 
     	It is usually done with terms in English or in other Latin-based languages, 
@@ -124,22 +119,93 @@
 
     <section>
     <h2>Opaque URIs</h2>
+    <p>Opaque URIs are resource identifiers which are not intended 
+       to represent terms in a natural language.</p>
+       
+     <pre class="example highlight">http://example.org/#I23AX45</pre>
+     <p>Arguments in favor</p>
+     <ul>
+     <li>Independence between content and language
+	 <li>Changes in textual descriptions do not imply changes in URIs
+	 <li>Suitable for automatic LD generation from existent resources<li>
+     </ul>
+     
+     <p>Arguments against</p>
+     <ul>
+     <li>Non human-readable
+	 <li>Opaque URIs may be difficult to handle by developers
+     </ul>
+     
     </section>
     
     <section>
     <h2>Full IRIs</h2>
+
+    <p>This patterns consists of using unrestricted IRIs which can 
+       contain Unicode characters outside the ASCII repertoire.</p>
+    <pre class="example highlight">http://օրինակ.օրգ/#Հայաստան</pre>
+    
+    <p>Arguments in favor</p>
+    <ul>
+    <li>More Readable (for speakers of that language)
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    <li>Security issues (spoofing)
+	<li>Unreadable for speakers of other languages
+	<li>Writing IRI domain names is difficult in certain languages 
+	     (e.g., Arabic, which is written right to left)
+    </ul>
+
     </section>
 
     <section>
     <h2>Internationalized paths only</h2>
+    <p>IRIs where the domain part is restricted to ASCII characters while 
+       the path can use Unicode characters.
+    <pre class="example highlight">http://example.org#Հայաստան</pre>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
+    
     </section>
 
     <section>
     <h2>Include language in host name</h2>
+    <p>
+    </p>
+    <pre class="example highlight">http://hy.example.org/#Հայաստան</pre>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
+    
     </section>
 
     <section>
     <h2>Include language in path </h2>
+    
+    <pre class="example highlight">
+      http://example.com/en/Armenia
+      http://example.com/Armenia.en 
+      http://example.com/Armenia?lang=en
+    </pre>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
+    
     </section>
 
     </section>
@@ -149,21 +215,39 @@
 
     <section>
     <h2>No language content negotiation</h2>
-    </section>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
+    
+        </section>
 
     <section>
     <h2>Language content negotiation</h2>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
     </section>
 
     <section>
     <h2>Language content redirection</h2>
+    <p>Arguments in favor</p>
+    <ul>
+    </ul>
+    
+    <p>Arguments against</p>
+    <ul>
+    </ul>
     </section>
 
     </section>
-
-
-    </section>
-
 
     <section>
     <h2>Textual information</h2>
