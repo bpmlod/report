@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Best Practices for Multilingual Linked Open Data</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "bpmlod",
+          editors: [
+                {   name:       "Jorge Gracia del Río",
+                    url:        "http://delicias.dia.fi.upm.es/~jgracia/",
+                    company:    "Ontology Engineering Group",
+                    companyURL: "http://www.oeg-upm.net/" },
+                    
+                {   name:       "Jose Emilio Labra Gayo",
+                        url:        "http://di.uniovi.es/~labra",
+                        company:    "University of Oviedo - WESO Research Group",
+                        companyURL: "http://weso.es" },
+                 {   name:       "The other chairman",
+                     url:        "",
+                     company:    "",
+                     companyURL: "" },        
+                     //  {   name:       "John McCrae",
+                     //          url:        "http://www.sc.cit-ec.uni-bielefeld.de/en/mitarbeiter/jmccrae",
+                     //          company:    "Semantic Computing Group - CITEC - Universität Bielefeld",
+                     //          companyURL: "http://www.sc.cit-ec.uni-bielefeld.de" },
+          ],
+          previousMaturity: "FPWD",
+	      previousPublishDate:  "2014-03-07",
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.webfoundation.org",
+          wgPublicList: "http://lists.w3.org/Archives/Public/public-bpmlod/",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+       Linked data usually contains labels, comments, descriptions, etc. 
+       that depend on the natural language used. 
+       When linked data appears in a multilingual setting, 
+       it is a challenge to publish and consume it. 
+       This document presents a survey on the work done by the Best Practices
+       for Multilingual Linked Open Data Group to identify a 
+        set of solutions and their benefits/drawbacks when applied in a given context.  
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> comunity group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+      <p>There are a number of ways that one may participate in the development of this specification:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/draft">Source code</a> 
+	     for this document can be found on Github.</li>
+
+      </ul>
+       
+    </section>
+    
+    <section>
+      <h2>Introduction</h2>
+      <p>This document describes the work done by the Best Practices for Multilingual Linked Open Data.
+      </p>
+   </section>
+   
+   <section>
+    <h2>Best Practices</h2>
+    
+    
+    <section>
+    
+
+	<h2>Naming and dereferencing</h2>
+
+    <section>
+    <h2>Naming</h2>
+    
+    <section>
+    <h2>Descriptive URIs</h2>
+  	<p class="practicedesc">
+    	Descriptive URIs use ASCII characters that are combined to represent 
+    	terms or abbreviations of terms in some natural language. 
+    	It is usually done with terms in English or in other Latin-based languages, 
+    	like French, Spanish, etc. where only a small fraction of their alphabets 
+    	is outside ASCII characters.          
+  	</p>
+  	<pre class="example highlight">http://example.org/Armenia</pre>
+
+    <p>Some arguments in favour</p>
+    <ul>
+    <li>Readability (but English/latin alphabet)
+	<li>Tool support
+	<li>The only way of describing the concept in ontologies that lack labels and comments
+  	</ul>
+  	
+  	<p>Some drawbacks</p>
+  	<ul>
+  	<li>Unreadable for non-Latin alphabet users
+	<li>Difficult to be descriptive enough in a URI in certain contexts 
+	    (biomedical, financial, ...), descriptive names are sometimes <i>criptical</i>
+  	</ul>
+  
+    </section>
+
+    <section>
+    <h2>Opaque URIs</h2>
+    </section>
+    
+    <section>
+    <h2>Full IRIs</h2>
+    </section>
+
+    <section>
+    <h2>Internationalized paths only</h2>
+    </section>
+
+    <section>
+    <h2>Include language in host name</h2>
+    </section>
+
+    <section>
+    <h2>Include language in path </h2>
+    </section>
+
+    </section>
+
+    <section>
+    <h2>Dereferencing</h2>
+
+    <section>
+    <h2>No language content negotiation</h2>
+    </section>
+
+    <section>
+    <h2>Language content negotiation</h2>
+    </section>
+
+    <section>
+    <h2>Language content redirection</h2>
+    </section>
+
+    </section>
+
+
+    </section>
+
+
+    <section>
+    <h2>Textual information</h2>
+    </section>
+
+    <section>
+    <h2>Linking</h2>
+    </section>
+
+    <section>
+    <h2>Ontologies and vocabularies</h2>
+    </section>
+
+    <section>
+    <h2>Quality</h2>
+    </section>
+
+   </section>
+    
+    <section>
+      <h2>References</h2>
+   </section>
+    
+ <section class="appendix">
+  <h2>Acknowledgements</h2>
+
+ <p>A large amount of thanks goes out to the BPMLOD Community Group
+    participants who worked through many of the technical issues on the mailing
+    list and the weekly telecons.</p>
+  
+  <!-- TODO: maintain this -->
+  <p>Thanks to the following individuals, in order of their first name, for
+    their input on the specification:
+<!--Dimitris Kontokostas,
+    Sören Auer --> 
+    ...here we should include the list of people that contributed
+  </p>
+</section>
+    
+ 
+</body>
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</html>
