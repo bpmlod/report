@@ -319,156 +319,159 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .
       <p>Given a word, e.g. home, retrieve all its senses and corresponding synsets in all supported languages:</p>
       
       <div>
-      <textarea readonly cols="80" rows="7">
+      <textarea id="code1">
       SELECT DISTINCT ?sense ?synset WHERE {
-	  ?entries a lemon:LexicalEntry .
-	  ?entries lemon:sense ?sense .
-	  ?sense lemon:reference ?synset .
-	  ?entries rdfs:label ?term .
-	  FILTER (STR(?term)="home")
-      } LIMIT 10
-      </textarea>
+	      ?entries a lemon:LexicalEntry .
+	      ?entries lemon:sense ?sense .
+	      ?sense lemon:reference ?synset .
+	      ?entries rdfs:label ?term .
+	      FILTER (STR(?term)="home")
+      } LIMIT 10</textarea>
       </div>
-      
+      <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("code1"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});
+      </script>
+
       <h3>Retrieve the senses of a lemma for a certain language</h3>
 
       <p>Given a word, e.g. home, retrieve all its senses and corresponding synsets in English:</p>
 
       <div>
-      <textarea readonly cols="80" rows="8">
+      <textarea id="code2">
       SELECT DISTINCT ?sense ?synset WHERE {
-	  ?entries a lemon:LexicalEntry .
-	  ?entries lemon:language "EN" .
-	  ?entries lemon:sense ?sense .
-	  ?sense lemon:reference ?synset .
-	  ?entries rdfs:label ?term .
-	  FILTER (STR(?term)="home")
-      } LIMIT 10
-      </textarea>
+	      ?entries a lemon:LexicalEntry .
+	      ?entries lemon:language "EN" .
+	      ?entries lemon:sense ?sense .
+	      ?sense lemon:reference ?synset .
+	      ?entries rdfs:label ?term .
+	      FILTER (STR(?term)="home")
+      } LIMIT 10</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code2"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve the translations of a given sense</h3>
 
       <p>Given a sense, we want to obtain all its translations: e.g., given the sense http://babelnet.org/2.0/home_EN/s00044488n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="5">
+      <textarea id="code3">
       SELECT ?translation WHERE {
-	  ?entry a lemon:LexicalSense .
-	  ?entry lexinfo:translation ?translation .
-	  FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
-      }
-      </textarea>
+	      ?entry a lemon:LexicalSense .
+	      ?entry lexinfo:translation ?translation .
+	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code3"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve license information about a sense</h3>
 
       <p>For instance, given the sense http://babelnet.org/2.0/home_EN/s00044488n:</p>
       
       <div>
-      <textarea readonly cols="80" rows="5">
+      <textarea id="code4">
       SELECT ?license WHERE {
-	  ?entry a lemon:LexicalSense .
-	  ?entry dcterms:license ?license .
-	  FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
-      }
-      </textarea>
+	      ?entry a lemon:LexicalSense .
+	      ?entry dcterms:license ?license .
+	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code4"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve the resources to which sense information belong</h3>
 
       <p>For instance, given the sense: http://babelnet.org/2.0/home_EN/s00044488n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="5">
+      <textarea id="code5">
       SELECT ?source WHERE {
-	  ?entry a lemon:LexicalSense .
-	  ?entry dc:source ?source .
-	  FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
-      }
-      </textarea>
+	      ?entry a lemon:LexicalSense .
+	      ?entry dc:source ?source .
+	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code5"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve textual definitions in all languages</h3>
 
       <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="12">
+      <textarea id="code6">
       SELECT DISTINCT ?language ?gloss ?license ?sourceurl WHERE {
-	  ?url a skos:Concept .
-	  ?url bn-lemon:synsetID ?synsetID .
-	  OPTIONAL {
-		?url bn-lemon:definition ?definition .
-		?definition lemon:language ?language .
-		?definition bn-lemon:gloss ?gloss .
-		?definition dcterms:license ?license .
-		?definition dc:source ?sourceurl .
-	  }
-	  FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
-      }
-      </textarea>
+	      ?url a skos:Concept .
+	      ?url bn-lemon:synsetID ?synsetID .
+	      OPTIONAL {
+	      	      ?url bn-lemon:definition ?definition .
+	      	      ?definition lemon:language ?language .
+	      	      ?definition bn-lemon:gloss ?gloss .
+	      	      ?definition dcterms:license ?license .
+	      	      ?definition dc:source ?sourceurl .
+	      }
+	      FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code6"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve textual definitions in a certain language</h3>
 
       <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="12">
+      <textarea id="code7">
       SELECT DISTINCT ?gloss ?license ?sourceurl WHERE {
-	  ?url a skos:Concept .
-	  ?url bn-lemon:synsetID ?synsetID .
-	  OPTIONAL {
-		?url bn-lemon:definition ?definition .
-		?definition lemon:language "EN" .
-		?definition bn-lemon:gloss ?gloss .
-		?definition dcterms:license ?license .
-		?definition dc:source ?sourceurl .
-	  }
-	  FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
-      }
-      </textarea>
+	      ?url a skos:Concept .
+	      ?url bn-lemon:synsetID ?synsetID .
+	      OPTIONAL {
+	      	      ?url bn-lemon:definition ?definition .
+	      	      ?definition lemon:language "EN" .
+	      	      ?definition bn-lemon:gloss ?gloss .
+	      	      ?definition dcterms:license ?license .
+	      	      ?definition dc:source ?sourceurl .
+	      }
+	      FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code7"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve a synset’s hyponyms</h3>
 
       <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="6">
+      <textarea id="code8">
       SELECT ?narrower WHERE {
-	  ?entry a skos:Concept .
-	  OPTIONAL { ?entry skos:narrower ?narrower }
-	  FILTER
-	  (STR(?entry)="http://babelnet.org/2.0/s00000356n")
-      }
-      </textarea>
+	      ?entry a skos:Concept .
+	      OPTIONAL { ?entry skos:narrower ?narrower }
+	      FILTER
+	      (STR(?entry)="http://babelnet.org/2.0/s00000356n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code8"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
       
       <h3>Retrieve a synset’s hypernyms</h3>
 
       <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
 
       <div>
-      <textarea readonly cols="80" rows="6">
+      <textarea id="code9">
       SELECT ?broader WHERE {
-	  ?entry a skos:Concept .
-	  OPTIONAL { ?entry skos:broader ?broader }
-	  FILTER
-	  (STR(?entry)="http://babelnet.org/2.0/s00000356n")
-      }
-      </textarea>
+	      ?entry a skos:Concept .
+	      OPTIONAL { ?entry skos:broader ?broader }
+	      FILTER
+	      (STR(?entry)="http://babelnet.org/2.0/s00000356n")
+      }</textarea>
       </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("code9"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve all the RDF information of a synset</h3>
 
       <p>For instance, given the synset http://babelnet.org/2.0/s00000356n:</p>
       
       <div>
-      <textarea readonly cols="80" rows="1">
-	DESCRIBE <http://babelnet.org/2.0/s00000356n>
-      </textarea>
+      <textarea id="code10">
+      DESCRIBE <http://babelnet.org/2.0/s00000356n></textarea>
+      <script>CodeMirror.fromTextArea(document.getElementById("code10"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
+
       </div>
    </section>
 
@@ -492,7 +495,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .
 
 <dt id="bib-SCHEMAS">[PROV_ONTOLOGY]</dt>
 <dd> PROV Ontology.  URL: <a href="http://www.w3.org/TR/prov-o/">http://www.w3.org/TR/prov-o/</a> 
- 
+
 </body>
 <script>
  setTimeout(function(){CodeMirror.colorize();}, 20);
