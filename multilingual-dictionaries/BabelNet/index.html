@@ -114,17 +114,15 @@
 
 	<h3>Data modelling and conversion</h3>
 	<p>We first provide a general picture which will help the reader throughout the guidelines and serves as a graphic representation of the main entities and the associated properties involved.</p>
-	<img src="BabelNet_2_Lemon_-_Guidelines.png">
+	<div><img alt="Graphic representation of the main entities and the associated properties involved in the BabelNet to Lemon conversion." src="BabelNet_2_Lemon_-_Guidelines.png"></div>
 	
-	<p>
-	In the following we list the entities and properties chosen for representing the respective pieces of information (words, senses, glosses, etc.), with a brief description and an example. We addressed issues like:
-	  <ul>
+	<p>In the following we list the entities and properties chosen for representing the respective pieces of information (words, senses, glosses, etc.), with a brief description and an example. We addressed issues like:</p>
+	<ul>
 	  <li>How do I model my own custom lexicon?</li>
 	  <li>How do I model word senses and the mapping between a lexical entry in my resource and its senses?</li>
 	  <li>How do I model common-usage and/or custom relationships between senses?</li>
 	  <li>How do I insert additional information into the model, such as textual definitions, concept attributes, etc.?</li>
-	  </ul>
-	</p>
+	</ul>
 
 	<h4>How to model a multilingual lexicon?</h4>
 	<p><b>Item(s) to model</b>: BabelNet implicitly provides a large multilingual lexicon.</p>
@@ -294,7 +292,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <p>These are metadata concerning the resource itself and include, for example, the type of license, the release version, the date of the release, the creator authority and the type of resource. What follows shows how this information is embedded:</p>
 
       <div>
-      <textarea readonly cols="160" rows="10">
+      <textarea id="example9">
       <dcterms:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/"/>
 	<rdfs:label xml:lang="EN">BabelNet</rdfs:label>
 	<owl:versionInfo>2.0</owl:versionInfo>
@@ -303,6 +301,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
       </textarea>
 	</div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example9"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
     <h4>License</h4>
     <p>The dc:license entity provides information about the license information by referring to the "legal document giving official permission to do something with the resource". Values include "http://creativecommons.org/licenses/by-sa/3.0/", "http://wordnet.princeton.edu/wordnet/license/", etc.</p>
@@ -310,11 +309,11 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
     <h4>Provenance</h4>
     <p>As stated in the Dublin Core vocabulary, the dc:source contains information about "a related resource from which the described resource is derived". In BabelNet this can take on several values, ranging among <a href="http://omegawiki.org/">"http://omegawiki.org/"</a>, <a href="http://wordnet.princeton.edu/">"http://wordnet.princeton.edu/"</a>, <a href="http://wikipedia.org/">"http://wikipedia.org/"</a>, etc.</p>
 
-    </p>It is worth noting that also the PROV Ontology (PROV-O) could be adopted for describing provenance metadata, since "The goal of PROV is to enable the wide publication and interchange of provenance on the Web and other information systems". The PROV-O provides in fact "a set of classes, properties, and restrictions that can be used to represent and interchange provenance information generated in different systems and under different contexts", including versioning information, activities, agents, roles and location identifiers, among others. Thanks to the higher expressivity of PROV-O, one could think to use the model alone for encoding all the information about provenance and licensing. Even if some terms in the Dublin Core vocabulary can be mapped in a one-to-one correspondence to terms in the PROV-O (e.g., <i>dc:provenance</i> can be mapped to the PROV-O term <i>prov:has_provenance</i>, see <a href="http://www.w3.org/TR/2013/WD-prov-dc-20130312/">http://www.w3.org/TR/2013/WD-prov-dc-20130312/</a>), this is unfortunately not always the case (e.g., <i>dc:license</i> has no direct corresponding term in the PROV-O). In addition to this, BabelNet is not fully exploiting the DC’s vocabulary expressive power. There are in fact a lot of provenance-related Dublin terms - about who affected a resource (<i>dcterms:contributor</i>, <i>dcterms:publisher</i>, etc.), about when (<i>dcterms:created</i>, <i>dcterms:modified</i>, <i>dcterms:valid</i>, etc.) and how (<i>dcterms:license</i>, <i>dcterms:rights</i>, <i>dcterms:isVersionOf</i>, etc.) - which are not currently included in our encoding and which instead are worth exploring and exploiting.</p>
+    <p>It is worth noting that also the PROV Ontology (PROV-O) could be adopted for describing provenance metadata, since "The goal of PROV is to enable the wide publication and interchange of provenance on the Web and other information systems". The PROV-O provides in fact "a set of classes, properties, and restrictions that can be used to represent and interchange provenance information generated in different systems and under different contexts", including versioning information, activities, agents, roles and location identifiers, among others. Thanks to the higher expressivity of PROV-O, one could think to use the model alone for encoding all the information about provenance and licensing. Even if some terms in the Dublin Core vocabulary can be mapped in a one-to-one correspondence to terms in the PROV-O (e.g., <i>dc:provenance</i> can be mapped to the PROV-O term <i>prov:has_provenance</i>, see <a href="http://www.w3.org/TR/2013/WD-prov-dc-20130312/">http://www.w3.org/TR/2013/WD-prov-dc-20130312/</a>), this is unfortunately not always the case (e.g., <i>dc:license</i> has no direct corresponding term in the PROV-O). In addition to this, BabelNet is not fully exploiting the DC’s vocabulary expressive power. There are in fact a lot of provenance-related Dublin terms - about who affected a resource (<i>dcterms:contributor</i>, <i>dcterms:publisher</i>, etc.), about when (<i>dcterms:created</i>, <i>dcterms:modified</i>, <i>dcterms:valid</i>, etc.) and how (<i>dcterms:license</i>, <i>dcterms:rights</i>, <i>dcterms:isVersionOf</i>, etc.) - which are not currently included in our encoding and which instead are worth exploring and exploiting.</p>
 
     <p>In conclusion, if on the one hand PROV-O provides a more complete set of tools for expressing information about provenance, on the other hand it still lacks some aspect concerning licensing and this shows how, eventually, a combination of the two is probably needed.</p>
     
-    <h4>Versioning</h4>
+    <h3>Versioning</h3>
     <p>As a final remark, versioning has been left out from the conversion, for the moment. As a first step the entity owl:versionInfo can be used so as to provide a textual reference for the current version of the linked data, entity which is now currently used only in the schema description and provides a global version number for the whole release (for RDF, currently 2.0). In the real world, though, maybe a more sophisticated infrastructure would be needed in order to express more complex versioning description needs (for example, what should be considered to be different versions of a resource?): a long-standing and notable example of such a phenomenon is represented by WordNet, where concepts have been split, lumped, deleted or added throughout time across versions. The current available vocabularies, in fact, do not account for heavy changes in the resource and this aspect might thus be investigated in more detail in the next future by the whole community.</p>
    </section>   
 
@@ -485,28 +484,32 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 
    <h2>References</h2>
 
-<dt id="bib-SCHEMAS">[BabelNet at LREC 2014]</dt>
-<dd>M. Ehrmann, F. Cecconi, D. Vannella, J. McCrae, P. Cimiano, R. Navigli, <a href="http://wwwusers.di.uniroma1.it/~navigli/pubs/LREC_2014_Ehrmannetal.pdf"> <cite>Representing Multilingual Data as Linked Data: the Case of BabelNet 2.0.</cite></a>. Proc. of the 9th Language Resources and Evaluation Conference (LREC 2014), Reykjavik, Iceland, 26-31 May, 2014.
+<dl>
+<dt id="bib-SCHEMAS1">[BabelNet at LREC 2014]</dt>
+<dd>M. Ehrmann, F. Cecconi, D. Vannella, J. McCrae, P. Cimiano, R. Navigli, <a href="http://wwwusers.di.uniroma1.it/~navigli/pubs/LREC_2014_Ehrmannetal.pdf"> <cite>Representing Multilingual Data as Linked Data: the Case of BabelNet 2.0.</cite></a>. Proc. of the 9th Language Resources and Evaluation Conference (LREC 2014), Reykjavik, Iceland, 26-31 May, 2014.</dd>
 
-[http://babelnet.org:8084/sparql/ BabelNet's SPARQL endpoint]
+<dt id="bib-SCHEMAS2">[BABELNET_SPARQL_ENDPOINT]</dt>
+<dd>BabelNet's SPARQL endpoint. URL: <a href="http://babelnet.org:8084/sparql/">http://babelnet.org:8084/sparql/</a></dd>
 
-[http://babelnet.org/ BabelNet homepage]
+<dt id="bib-SCHEMAS3">[BABELNET_HOMEPAGE]</dt>
+<dd>BabelNet homepage. URL: <a href="http://babelnet.org/">http://babelnet.org/</a></dd>
 
-<dt id="bib-SCHEMAS">[LEMON_MODEL]</dt>
-<dd> The lemon model.  URL: <a href="http://lemon-model.net/">http://lemon-model.net/</a> 
+<dt id="bib-SCHEMAS4">[LEMON_MODEL]</dt>
+<dd> The lemon model.  URL: <a href="http://lemon-model.net/">http://lemon-model.net/</a></dd>
 
-<dt id="bib-SCHEMAS">[JENA_API]</dt>
-<dd> Jena API.  URL: <a href="https://jena.apache.org/">https://jena.apache.org/</a> 
+<dt id="bib-SCHEMAS5">[JENA_API]</dt>
+<dd> Jena API.  URL: <a href="https://jena.apache.org/">https://jena.apache.org/</a></dd>
 
-<dt id="bib-SCHEMAS">[ITS2.0]</dt>
-<dd> International Tag Set.  URL: <a href="http://www.w3.org/TR/its20/">http://www.w3.org/TR/its20/</a> 
+<dt id="bib-SCHEMAS6">[ITS2.0]</dt>
+<dd> International Tag Set.  URL: <a href="http://www.w3.org/TR/its20/">http://www.w3.org/TR/its20/</a></dd>
 
-<dt id="bib-SCHEMAS">[PROV_ONTOLOGY]</dt>
-<dd> PROV Ontology.  URL: <a href="http://www.w3.org/TR/prov-o/">http://www.w3.org/TR/prov-o/</a> 
+<dt id="bib-SCHEMAS7">[PROV_ONTOLOGY]</dt>
+<dd> PROV Ontology.  URL: <a href="http://www.w3.org/TR/prov-o/">http://www.w3.org/TR/prov-o/</a></dd>
+</dl>
 
-</body>
 <script>
  setTimeout(function(){CodeMirror.colorize();}, 20);
 </script>
 
+</body>
 </html>
