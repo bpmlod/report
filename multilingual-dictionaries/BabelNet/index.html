@@ -139,9 +139,10 @@ bn:plane_n_EN  a              lemon:LexicalEntry ;
         rdfs:label            "plane"@en ;
         lemon:canonicalForm   <http://babelnet.org/rdf/plane_n_EN/canonicalForm> ;
         lemon:language        "EN" ;
-        lemon:sense           <http://babelnet.org/rdf/plane_EN/s00016196n> , <http://babelnet.org/rdf/plane_EN/s00062766n> ,
-                              <http://babelnet.org/rdf/plane_EN/s00062768n> , <http://babelnet.org/rdf/plane_EN/s00062767n> ,
-                              <http://babelnet.org/rdf/plane_EN/s00001697n> ;
+        lemon:sense           <http://babelnet.org/rdf/plane_EN/s00062767n> , <http://babelnet.org/rdf/plane_EN/s00062775n> ,
+			      <http://babelnet.org/rdf/plane_EN/s00062768n> , <http://babelnet.org/rdf/plane_EN/s16750414n> ,
+			      <http://babelnet.org/rdf/plane_EN/s00001697n> , <http://babelnet.org/rdf/plane_EN/s00016196n> ,
+			      <http://babelnet.org/rdf/plane_EN/s00062766n> , <http://babelnet.org/rdf/plane_EN/s00039226n> ;
         lexinfo:partOfSpeech  lexinfo:noun .</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
@@ -218,8 +219,8 @@ bn:s00001697n  a                  skos:Concept ;
         bn-lemon:synsetType       "concept" ;
         dcterms:license           <http://creativecommons.org/licenses/by-nc-sa/3.0/> ;
         lexinfo:partMeronym       bn:s00081337n , bn:s00031553n , bn:s00036743n , bn:s00036922n , bn:s00012036n , bn:s00049869n , bn:s00057076n , bn:s00000632n , bn:s00065857n , bn:s00081307n ;
-        skos:broader              bn:s00043466n ;
-        skos:exactMatch           lemon-Omega:OW_eng_Synset_9672 , dbpedia:Fixed-wing_aircraft , lemon-WordNet:wn30-02691156-n .</textarea>
+        skos:broader              bn:s16750414n , bn:s00043466n ;
+        skos:exactMatch           lemon-Omega:OW_eng_Synset_9672 , dbpedia:Airplane , lemon-WordNet:wn30-02691156-n .</textarea>
 	</div>
 	<script>CodeMirror.fromTextArea(document.getElementById("example5"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
@@ -246,9 +247,9 @@ bn:s00001697n  a                  skos:Concept ;
       <textarea id="example7">
 bn:s00001697n_Gloss3_EN
         a                bn-lemon:BabelGloss ;
-        bn-lemon:gloss   "A fixed wing aircraft is an aircraft capable of flight using wings that generate lift due to the vehicle's forward airspeed and the shape of the wings." ;
-        dc:source        <http://wikipedia.org/> ;
-        dcterms:license  <http://creativecommons.org/licenses/by-sa/3.0/> ;
+        bn-lemon:gloss   "A powered heavier-than-air aircraft with fixed wings that obtains lift by the Bernoulli effect and is used for transportation." ;
+        dc:source        <http://omegawiki.org/> ;
+        dcterms:license  <http://creativecommons.org/licenses/by/3.0/> ;
         lemon:language   "EN" .
 
 bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
@@ -264,20 +265,20 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="example8">
   lexinfo:partMeronym       bn:s00081337n , bn:s00031553n , bn:s00036743n , bn:s00036922n , bn:s00012036n , bn:s00049869n , bn:s00057076n , bn:s00000632n , bn:s00065857n , bn:s00081307n ;
-        skos:broader        bn:s00043466n ;
-        skos:exactMatch     lemon-Omega:OW_eng_Synset_9672 , dbpedia:Fixed-wing_aircraft , 
+        skos:broader              bn:s16750414n , bn:s00043466n ;
+        skos:exactMatch           lemon-Omega:OW_eng_Synset_9672 , dbpedia:Airplane , lemon-WordNet:wn30-02691156-n . 
       </textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example8"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
-      <p><b>Issues</b>: we also note that there is another type of relation encoding the notion of 'equivalence' between concepts across different resources (such as the BabelNet synset "bn:00001697n" and the DBpedia concept <a href="http://dbpedia.org/page/Fixed-wing_aircraft">http://dbpedia.org/page/Fixed-wing_aircraft</a>). We thus decided to describe this notion of equivalence by means of the <i>skos:exactMatch</i> property; note, however, that a similar choice could have been made in favor of the <i>owl:sameAs</i> property or by relaxing the type of matching with <i>skos:closeMatch</i>, <i>rdf:seeAlso</i>, etc.</p>
+      <p><b>Issues</b>: we also note that there is another type of relation encoding the notion of 'equivalence' between concepts across different resources (such as the BabelNet synset "bn:00001697n" and the DBpedia concept <a href="http://dbpedia.org/page/Airplane">http://dbpedia.org/page/Airplane</a>). We thus decided to describe this notion of equivalence by means of the <i>skos:exactMatch</i> property; note, however, that a similar choice could have been made in favor of the <i>owl:sameAs</i> property or by relaxing the type of matching with <i>skos:closeMatch</i>, <i>rdf:seeAlso</i>, etc.</p>
 
 	<h4>How to encode resource names?</h4>
       <p><b>Item(s) to model</b>: Resource identifiers can be encoded by using either URIs or IRIs, strings which uniquely identify resources in a model. URIs facilitate automatic elaboration of linked data, whereas IRIs improve readability for human end users. URIs can either be descriptive, that is, encoding as much meaning as possible (e.g., bn:Haus_n_DE which represents the German lexical entry for “House”), or opaque, that is providing encoding names which do not convey the content of the resource identifier (e.g., the URI for synset with ID bn:00024498n is bn:s00024498n which does not truly say much about the synset’s content). On the other hand, IRIs preserve a language’s specific alphabet but at the same time hinder readability to non-native speakers. For example the following IRI “bn:樓宇_ZH/s00044994n” encodes the sense of House in Chinese, but a non native speaker can have a hard time understanding this. An additional dimension of the naming scheme is represented by the choice whether to include the language tag in the resource identifier in the path or URI (as in the example above) or in the host name (e.g., <a href="http://zh.babelnet.org/rdf/樓宇/s00044994n">http://zh.babelnet.org/rdf/樓宇/s00044994n</a>).</p>
 
       <p><b>Our solution</b>: use both URIs and IRIs in order to have the highest degree of flexibility and expressivity. Since our lexical resource is not divided up into different datasets, the option to provide the language identifier as part of the host name was not practical; so we decided to include it as part of the URI/IRI. For instance, the previous IRI encoded the language by means of the ‘ZH’ suffix, concatenated with the sense string 樓宇.</p>
 
-      <p><b>Issues</b>: The current usage of resource identifiers is not unified yet, so that certain entities, such as Babel synsets and BabelGlosses, are encoded with URI, while other language-specific entities, such as BabelSenses and LexicalEntries, use IRI. Generally speaking, whenever it was possible to do so, we preferred meaningful URIs (e.g., bn:Haus_n_DE); in other cases we came up with IDs which uniquely identified the resource. As regards Babel synset URIs, we preferred to mantain the synset identity quite general and avoided to promote any sense as the main sense for that synset. As regards glosses, the gloss URI encodes the synsetID the gloss refers to, the language and an incremental integer which differentiates between glosses of the same language (e.g., the synset for the first sense of “home” has 3 English glosses coming from different sources, identified by bn: s00044994n_Gloss1_EN, bn: s00044994n_Gloss2_EN, and bn: s00044994n_Gloss3_EN).</p>
+      <p><b>Issues</b>: The current usage of resource identifiers is not unified yet, so that certain entities, such as Babel synsets and BabelGlosses, are encoded with URI, while other language-specific entities, such as BabelSenses and LexicalEntries, use IRI. Generally speaking, whenever it was possible to do so, we preferred meaningful URIs (e.g., bn:Haus_n_DE); in other cases we came up with IDs which uniquely identified the resource. As regards Babel synset URIs, we preferred to mantain the synset identity quite general and avoided to promote any sense as the main sense for that synset. As regards glosses, the gloss URI encodes the synsetID the gloss refers to, the language and an incremental integer which differentiates between glosses of the same language (e.g., the synset for the first sense of “home” has 3 English glosses coming from different sources, identified by bn:s00044994n_Gloss1_EN, bn:s00044994n_Gloss2_EN, and bn:s00044994n_Gloss3_EN).</p>
     </section>
 
     <!--<section>
@@ -298,7 +299,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
      <dcterms:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/"/>
    <rdfs:label xml:lang="EN">BabelNet</rdfs:label>
 	<owl:versionInfo>3.0</owl:versionInfo>
-	<dc:date>October 2013</dc:date>
+	<dc:date>December 2014</dc:date>
 	<dc:creator>Linguistic Computing Laboratory - Computer Science Department - Sapienza University of Rome</dc:creator>
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/></textarea>
 	</div>
