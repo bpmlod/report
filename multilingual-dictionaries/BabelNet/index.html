@@ -68,7 +68,7 @@
     <section>
       <h2>Description of the type of resource</h2>
       <p>
-      BabelNet is a a very large multilingual encyclopedic dictionary and ontology covering 50 languages, and created by 1) the automatic, seamless integration of WordNet with Wikipedia, OmegaWiki, Open Multilingual WordNet, Wiktionary, and Wikidata and 2) the use of statistical machine translation to acquire a very large amount of multilingual concept lexicalizations.
+      BabelNet is a a very large multilingual encyclopedic dictionary and ontology covering 271 languages, and created by 1) the automatic, seamless integration of WordNet with Wikipedia, OmegaWiki, Open Multilingual WordNet, Wiktionary, and Wikidata and 2) the use of statistical machine translation to acquire a very large amount of multilingual concept lexicalizations.
       </p>
     <h3>The backbone model: lemon</h3>
     <p>
@@ -126,7 +126,7 @@
 
 	<h4>How to model a multilingual lexicon?</h4>
 	<p><b>Item(s) to model</b>: BabelNet implicitly provides a large multilingual lexicon.</p>
-	<p><b>Our solution</b>: The closest entity in the lemon model is <b>lemon:Lexicon</b>. The RDF resource consists of a set of Lexicons (lemon:Lexicon), one per language, seen as containers of words. Currently BabelNet supports 50 languages, so BabelNet-lemon includes 50 lemon:Lexicons.</p>
+	<p><b>Our solution</b>: The closest entity in the lemon model is <b>lemon:Lexicon</b>. The RDF resource consists of a set of Lexicons (lemon:Lexicon), one per language, seen as containers of words. Currently BabelNet supports 271 languages, so BabelNet-lemon includes 271 lemon:Lexicons.</p>
 	<p><b>Issues</b>: lemon:Lexicon forces us to work on a language-by-language basis, whereas in BabelNet this distinction does not need to be made explicit, as BabelNet is merely a collection of Babel synsets, i.e. multilingual synsets, and their relations.</p>
 
 	<h4>How to model word forms and lemmas?</h4>
@@ -137,11 +137,11 @@
       <textarea id="example1">
 bn:plane_n_EN  a              lemon:LexicalEntry ;
         rdfs:label            "plane"@en ;
-        lemon:canonicalForm   <http://babelnet.org/2.0/plane_n_EN/canonicalForm> ;
+        lemon:canonicalForm   <http://babelnet.org/rdf/plane_n_EN/canonicalForm> ;
         lemon:language        "EN" ;
-        lemon:sense           <http://babelnet.org/2.0/plane_EN/s00016196n> , <http://babelnet.org/2.0/plane_EN/s00062766n> ,
-                              <http://babelnet.org/2.0/plane_EN/s00062768n> , <http://babelnet.org/2.0/plane_EN/s00062767n> ,
-                              <http://babelnet.org/2.0/plane_EN/s00001697n> ;
+        lemon:sense           <http://babelnet.org/rdf/plane_EN/s00016196n> , <http://babelnet.org/rdf/plane_EN/s00062766n> ,
+                              <http://babelnet.org/rdf/plane_EN/s00062768n> , <http://babelnet.org/rdf/plane_EN/s00062767n> ,
+                              <http://babelnet.org/rdf/plane_EN/s00001697n> ;
         lexinfo:partOfSpeech  lexinfo:noun .</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
@@ -152,9 +152,9 @@ bn:plane_n_EN  a              lemon:LexicalEntry ;
 
 <div>
       <textarea id="example2">
-bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/2.0/plane_n_EN/canonicalForm> .
+bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/rdf/plane_n_EN/canonicalForm> .
 
-<http://babelnet.org/2.0/plane_n_EN/canonicalForm>
+<http://babelnet.org/rdf/plane_n_EN/canonicalForm>
         a                 lemon:Form ;
         lemon:writtenRep  "plane"@en .</textarea>
 	</div>
@@ -169,7 +169,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/2.0/plane_n_EN/canonica
 
       <div>
       <textarea id="example3">
-<http://babelnet.org/2.0/plane_EN/s00001697n>
+<http://babelnet.org/rdf/plane_EN/s00001697n>
         a                lemon:LexicalSense ;
         dc:source        <http://omegawiki.org/> , <http://wordnet.princeton.edu/> ;
         dcterms:license  <http://wordnet.princeton.edu/wordnet/license/> , <http://creativecommons.org/licenses/by/3.0/> ;
@@ -181,12 +181,12 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/2.0/plane_n_EN/canonica
 
 	<h4>How to model sense translations?</h4>
 	<p><b>Item(s) to model</b>: senses which are translations of other senses within a given Babel synset.</p>
-	<p><b>Our solution</b>: Senses (modeled as <b>lemon:LexicalSense</b>) might also have translations into other senses in other languages. The lemon model alone does not provide a property for expressing this information, so we resorted to the relation lexinfo:translation within the LexInfo ontology model. For example, the fact that the first English sense of "plane" <a href="http://babelnet.org/2.0/plane_EN/s00001697n">http://babelnet.org/2.0/plane_EN/s00001697n</a> is translated into the French sense <a href="http://babelnet.org/2.0/avion_FR/s00001697n">http://babelnet.org/2.0/avion_FR/s00001697n</a> is encoded as:</p>
+	<p><b>Our solution</b>: Senses (modeled as <b>lemon:LexicalSense</b>) might also have translations into other senses in other languages. The lemon model alone does not provide a property for expressing this information, so we resorted to the relation lexinfo:translation within the LexInfo ontology model. For example, the fact that the first English sense of "plane" <a href="http://babelnet.org/rdf/plane_EN/s00001697n">http://babelnet.org/rdf/plane_EN/s00001697n</a> is translated into the French sense <a href="http://babelnet.org/rdf/avion_FR/s00001697n">http://babelnet.org/rdf/avion_FR/s00001697n</a> is encoded as:</p>
 
       <div>
       <textarea id="example4">
-<http://babelnet.org/2.0/plane_EN/s00001697n>
-        lexinfo:translation <http://babelnet.org/2.0/avion_FR/s00001697n>.</textarea>
+<http://babelnet.org/rdf/plane_EN/s00001697n>
+        lexinfo:translation <http://babelnet.org/rdf/avion_FR/s00001697n>.</textarea>
 	</div>
 	<script>CodeMirror.fromTextArea(document.getElementById("example4"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
@@ -209,7 +209,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/2.0/plane_n_EN/canonica
 	<h4>How to encode concepts?</h4>
 	<p><b>Item(s) to model</b>: Babel synsets, i.e. sets of multilingual lexicalizations denoting a certain concept, are the core elements of BabelNet.</p>
 
-	<p><b>Our solution</b>: We used SKOS Concepts (skos:Concept) to represent ‘units of thought’ (in our case: Babel synsets). This was done thanks to its definition and because of its use to model similar objects in other RDF resources (e.g. WordNet). For example, the Babel synset which contains the first sense of plane, i.e., <a href="http://babelnet.org/2.0/s00043466n">http://babelnet.org/2.0/s00043466n</a>, is encoded as:</p>
+	<p><b>Our solution</b>: We used SKOS Concepts (skos:Concept) to represent ‘units of thought’ (in our case: Babel synsets). This was done thanks to its definition and because of its use to model similar objects in other RDF resources (e.g. WordNet). For example, the Babel synset which contains the first sense of plane, i.e., <a href="http://babelnet.org/rdf/s00043466n">http://babelnet.org/rdf/s00043466n</a>, is encoded as:</p>
 
       <div>
       <textarea id="example5">
@@ -273,7 +273,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <p><b>Issues</b>: we also note that there is another type of relation encoding the notion of 'equivalence' between concepts across different resources (such as the BabelNet synset "bn:00001697n" and the DBpedia concept <a href="http://dbpedia.org/page/Fixed-wing_aircraft">http://dbpedia.org/page/Fixed-wing_aircraft</a>). We thus decided to describe this notion of equivalence by means of the <i>skos:exactMatch</i> property; note, however, that a similar choice could have been made in favor of the <i>owl:sameAs</i> property or by relaxing the type of matching with <i>skos:closeMatch</i>, <i>rdf:seeAlso</i>, etc.</p>
 
 	<h4>How to encode resource names?</h4>
-      <p><b>Item(s) to model</b>: Resource identifiers can be encoded by using either URIs or IRIs, strings which uniquely identify resources in a model. URIs facilitate automatic elaboration of linked data, whereas IRIs improve readability for human end users. URIs can either be descriptive, that is, encoding as much meaning as possible (e.g., bn:Haus_n_DE which represents the German lexical entry for “House”), or opaque, that is providing encoding names which do not convey the content of the resource identifier (e.g., the URI for synset with ID bn:00024498n is bn:s00024498n which does not truly say much about the synset’s content). On the other hand, IRIs preserve a language’s specific alphabet but at the same time hinder readability to non-native speakers. For example the following IRI “bn:樓宇_ZH/s00044994n” encodes the sense of House in Chinese, but a non native speaker can have a hard time understanding this. An additional dimension of the naming scheme is represented by the choice whether to include the language tag in the resource identifier in the path or URI (as in the example above) or in the host name (e.g., <a href="http://zh.babelnet.org/2.0/樓宇/s00044994n">http://zh.babelnet.org/2.0/樓宇/s00044994n</a>).</p>
+      <p><b>Item(s) to model</b>: Resource identifiers can be encoded by using either URIs or IRIs, strings which uniquely identify resources in a model. URIs facilitate automatic elaboration of linked data, whereas IRIs improve readability for human end users. URIs can either be descriptive, that is, encoding as much meaning as possible (e.g., bn:Haus_n_DE which represents the German lexical entry for “House”), or opaque, that is providing encoding names which do not convey the content of the resource identifier (e.g., the URI for synset with ID bn:00024498n is bn:s00024498n which does not truly say much about the synset’s content). On the other hand, IRIs preserve a language’s specific alphabet but at the same time hinder readability to non-native speakers. For example the following IRI “bn:樓宇_ZH/s00044994n” encodes the sense of House in Chinese, but a non native speaker can have a hard time understanding this. An additional dimension of the naming scheme is represented by the choice whether to include the language tag in the resource identifier in the path or URI (as in the example above) or in the host name (e.g., <a href="http://zh.babelnet.org/rdf/樓宇/s00044994n">http://zh.babelnet.org/rdf/樓宇/s00044994n</a>).</p>
 
       <p><b>Our solution</b>: use both URIs and IRIs in order to have the highest degree of flexibility and expressivity. Since our lexical resource is not divided up into different datasets, the option to provide the language identifier as part of the host name was not practical; so we decided to include it as part of the URI/IRI. For instance, the previous IRI encoded the language by means of the ‘ZH’ suffix, concatenated with the sense string 樓宇.</p>
 
@@ -297,7 +297,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <textarea id="example9">
      <dcterms:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/"/>
    <rdfs:label xml:lang="EN">BabelNet</rdfs:label>
-	<owl:versionInfo>2.0</owl:versionInfo>
+	<owl:versionInfo>3.0</owl:versionInfo>
 	<dc:date>October 2013</dc:date>
 	<dc:creator>Linguistic Computing Laboratory - Computer Science Department - Sapienza University of Rome</dc:creator>
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/></textarea>
@@ -315,7 +315,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
     <p>In conclusion, if on the one hand PROV-O provides a more complete set of tools for expressing information about provenance, on the other hand it still lacks some aspect concerning licensing and this shows how, eventually, a combination of the two is probably needed.</p>
     
     <h3>Versioning</h3>
-    <p>As a final remark, versioning has been left out from the conversion, for the moment. As a first step the entity <i>owl:versionInfo</i> could be used so as to provide a textual reference for the current version of the linked data. This entity is currently used only in BabelNet-lemon schema description and globally provides a version number for the whole release (for RDF, currently 2.0). In the real world, though, maybe a more sophisticated infrastructure would be needed in order to express more complex versioning description needs (for example, what should be considered to be different versions of a resource?): a long-standing and notable example of such a phenomenon is represented by WordNet, where concepts have been split, lumped, deleted or added throughout time across versions. The current available vocabularies, in fact, do not account for heavy changes in the resource and this aspect might thus be investigated in more detail in the next future by the whole community.</p>
+    <p>As a final remark, versioning has been left out from the conversion, for the moment. As a first step the entity <i>owl:versionInfo</i> could be used so as to provide a textual reference for the current version of the linked data. This entity is currently used only in BabelNet-lemon schema description and globally provides a version number for the whole release (for RDF, currently 3.0). In the real world, though, maybe a more sophisticated infrastructure would be needed in order to express more complex versioning description needs (for example, what should be considered to be different versions of a resource?): a long-standing and notable example of such a phenomenon is represented by WordNet, where concepts have been split, lumped, deleted or added throughout time across versions. The current available vocabularies, in fact, do not account for heavy changes in the resource and this aspect might thus be investigated in more detail in the next future by the whole community.</p>
    </section>   
 
    <section>
@@ -359,49 +359,49 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 
       <h3>Retrieve the translations of a given sense</h3>
 
-      <p>Given a sense, we want to obtain all its translations: e.g., given the sense http://babelnet.org/2.0/home_EN/s00044488n:</p>
+      <p>Given a sense, we want to obtain all its translations: e.g., given the sense http://babelnet.org/rdf/home_EN/s00044488n:</p>
 
       <div>
       <textarea id="code3">
       SELECT ?translation WHERE {
 	      ?entry a lemon:LexicalSense .
 	      ?entry lexinfo:translation ?translation .
-	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code3"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve license information about a sense</h3>
 
-      <p>For instance, given the sense http://babelnet.org/2.0/home_EN/s00044488n:</p>
+      <p>For instance, given the sense http://babelnet.org/rdf/home_EN/s00044488n:</p>
       
       <div>
       <textarea id="code4">
       SELECT ?license WHERE {
 	      ?entry a lemon:LexicalSense .
 	      ?entry dcterms:license ?license .
-	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code4"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve the resources to which sense information belong</h3>
 
-      <p>For instance, given the sense: http://babelnet.org/2.0/home_EN/s00044488n:</p>
+      <p>For instance, given the sense: http://babelnet.org/rdf/home_EN/s00044488n:</p>
 
       <div>
       <textarea id="code5">
       SELECT ?source WHERE {
 	      ?entry a lemon:LexicalSense .
 	      ?entry dc:source ?source .
-	      FILTER (STR(?entry)="http://babelnet.org/2.0/home_EN/s00044488n")
+	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code5"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve textual definitions in all languages</h3>
 
-      <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
+      <p>For instance, given the synset: http://babelnet.org/rdf/s00000356n:</p>
 
       <div>
       <textarea id="code6">
@@ -415,14 +415,14 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 	      	      ?definition dcterms:license ?license .
 	      	      ?definition dc:source ?sourceurl .
 	      }
-	      FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
+	      FILTER (STR(?url)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code6"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve textual definitions in a certain language</h3>
 
-      <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
+      <p>For instance, given the synset: http://babelnet.org/rdf/s00000356n:</p>
 
       <div>
       <textarea id="code7">
@@ -436,14 +436,14 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 	      	      ?definition dcterms:license ?license .
 	      	      ?definition dc:source ?sourceurl .
 	      }
-	      FILTER (STR(?url)="http://babelnet.org/2.0/s00000356n")
+	      FILTER (STR(?url)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code7"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve a synset’s hyponyms</h3>
 
-      <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
+      <p>For instance, given the synset: http://babelnet.org/rdf/s00000356n:</p>
 
       <div>
       <textarea id="code8">
@@ -451,14 +451,14 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 	      ?entry a skos:Concept .
 	      OPTIONAL { ?entry skos:narrower ?narrower }
 	      FILTER
-	      (STR(?entry)="http://babelnet.org/2.0/s00000356n")
+	      (STR(?entry)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code8"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
       
       <h3>Retrieve a synset’s hypernyms</h3>
 
-      <p>For instance, given the synset: http://babelnet.org/2.0/s00000356n:</p>
+      <p>For instance, given the synset: http://babelnet.org/rdf/s00000356n:</p>
 
       <div>
       <textarea id="code9">
@@ -466,18 +466,18 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 	      ?entry a skos:Concept .
 	      OPTIONAL { ?entry skos:broader ?broader }
 	      FILTER
-	      (STR(?entry)="http://babelnet.org/2.0/s00000356n")
+	      (STR(?entry)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code9"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       <h3>Retrieve all the RDF information of a synset</h3>
 
-      <p>For instance, given the synset http://babelnet.org/2.0/s00000356n:</p>
+      <p>For instance, given the synset http://babelnet.org/rdf/s00000356n:</p>
       
       <div>
       <textarea id="code10">
-      DESCRIBE <http://babelnet.org/2.0/s00000356n></textarea>
+      DESCRIBE <http://babelnet.org/rdf/s00000356n></textarea>
       <script>CodeMirror.fromTextArea(document.getElementById("code10"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
 
       </div>
