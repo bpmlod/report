@@ -240,7 +240,7 @@ bn:s00001697n  a                  skos:Concept ;
       <p><b>Issues</b>: since we could not find any similar notion in the models used, we decided to introduce a new property. In general, since attributes can bear arbitrary information which might or might not fit pre-defined entities and properties, it is not possible to give a general guideline in this case and it is thus responsibility of the designer to find the best solution, on a case-by-case basis.</p>
 
 	<h4>How to model a concept gloss?</h4>
-      <p><b>Item(s) to model</b>: BabelNet provides multiple glosses in several languages for each Babel synset. A gloss is a short explanatory sentence of a concept. For example the English OmegaWiki definition for the first sense of plane in BabelNet is "A powered heavier-than-air aircraft with fixed wings that obtains lift by the Bernoulli effect and is used for transportation.".</p>
+      <p><b>Item(s) to model</b>: BabelNet provides multiple glosses in several languages for each Babel synset. A gloss is a short explanatory sentence of a concept. For example the English OmegaWiki definition for the first sense of plane in BabelNet is "A powered heavier-than-air aircraft with fixed wings that obtains lift by the Bernoulli effect and is used for transportation".</p>
       <p><b>Our solution</b>: we defined a new entity, called <b>bn-lemon:BabelGloss</b>, which encodes a textual definition associated to a Babel synset. The property bn-lemon:definition binds synsets to their gloss(es). The fragment of text below is intended to show an example of the encoding of an English BabelGloss. Note that information such as the reference language (lemon:language) and the source of the definition (dc:source) are also attached to the gloss.</p>
 
       <div>
