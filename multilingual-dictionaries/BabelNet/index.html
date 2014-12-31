@@ -349,11 +349,9 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <textarea id="code2">
       SELECT DISTINCT ?sense ?synset WHERE {
 	      ?entries a lemon:LexicalEntry .
-	      ?entries lemon:language "EN" .
 	      ?entries lemon:sense ?sense .
 	      ?sense lemon:reference ?synset .
-	      ?entries rdfs:label ?term .
-	      FILTER (STR(?term)="home")
+	      ?entries rdfs:label "home"@en .
       } LIMIT 10</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code2"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -365,9 +363,8 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code3">
       SELECT ?translation WHERE {
-	      ?entry a lemon:LexicalSense .
-	      ?entry lexinfo:translation ?translation .
-	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
+	      <http://babelnet.org/rdf/home_EN/s00044488n> a lemon:LexicalSense ;
+							   lexinfo:translation ?translation .
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code3"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -379,9 +376,8 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code4">
       SELECT ?license WHERE {
-	      ?entry a lemon:LexicalSense .
-	      ?entry dcterms:license ?license .
-	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
+	      <http://babelnet.org/rdf/home_EN/s00044488n> a lemon:LexicalSense ;
+							   dcterms:license ?license .
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code4"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -393,9 +389,8 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code5">
       SELECT ?source WHERE {
-	      ?entry a lemon:LexicalSense .
-	      ?entry dc:source ?source .
-	      FILTER (STR(?entry)="http://babelnet.org/rdf/home_EN/s00044488n")
+	      <http://babelnet.org/rdf/home_EN/s00044488n> a lemon:LexicalSense ;
+							   dc:source ?source .
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code5"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -407,16 +402,15 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code6">
       SELECT DISTINCT ?language ?gloss ?license ?sourceurl WHERE {
-	      ?url a skos:Concept .
-	      ?url bn-lemon:synsetID ?synsetID .
+	      <http://babelnet.org/rdf/s00000356n> a skos:Concept ;
+						   bn-lemon:synsetID ?synsetID .
 	      OPTIONAL {
-	      	      ?url bn-lemon:definition ?definition .
+	      	      <http://babelnet.org/rdf/s00000356n> bn-lemon:definition ?definition .
 	      	      ?definition lemon:language ?language .
 	      	      ?definition bn-lemon:gloss ?gloss .
 	      	      ?definition dcterms:license ?license .
 	      	      ?definition dc:source ?sourceurl .
 	      }
-	      FILTER (STR(?url)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code6"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -428,16 +422,15 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code7">
       SELECT DISTINCT ?gloss ?license ?sourceurl WHERE {
-	      ?url a skos:Concept .
-	      ?url bn-lemon:synsetID ?synsetID .
+	      <http://babelnet.org/rdf/s00000356n> a skos:Concept ;
+						   bn-lemon:synsetID ?synsetID .
 	      OPTIONAL {
-	      	      ?url bn-lemon:definition ?definition .
+	      	      <http://babelnet.org/rdf/s00000356n> bn-lemon:definition ?definition .
 	      	      ?definition lemon:language "EN" .
 	      	      ?definition bn-lemon:gloss ?gloss .
 	      	      ?definition dcterms:license ?license .
 	      	      ?definition dc:source ?sourceurl .
 	      }
-	      FILTER (STR(?url)="http://babelnet.org/rdf/s00000356n")
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code7"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -449,10 +442,8 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code8">
       SELECT ?narrower WHERE {
-	      ?entry a skos:Concept .
-	      OPTIONAL { ?entry skos:narrower ?narrower }
-	      FILTER
-	      (STR(?entry)="http://babelnet.org/rdf/s00000356n")
+	      <http://babelnet.org/rdf/s00000356n> a skos:Concept .
+	      OPTIONAL { <http://babelnet.org/rdf/s00000356n> skos:narrower ?narrower }
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code8"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
@@ -464,10 +455,8 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <div>
       <textarea id="code9">
       SELECT ?broader WHERE {
-	      ?entry a skos:Concept .
-	      OPTIONAL { ?entry skos:broader ?broader }
-	      FILTER
-	      (STR(?entry)="http://babelnet.org/rdf/s00000356n")
+	      <http://babelnet.org/rdf/s00000356n> a skos:Concept .
+	      OPTIONAL { <http://babelnet.org/rdf/s00000356n> skos:broader ?broader }
       }</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("code9"), {mode: "application/x-sparql-query", lineNumbers: true, readOnly:true});</script>
