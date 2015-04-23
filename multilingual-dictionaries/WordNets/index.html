@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Guidelines for Linguistic Linked Data Generation: Multilingual Dictionaries (WordNets)</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "wordnet-bpmlod",
+          editors: [
+                {   name:       "XXX",
+                    url:        "XXX",
+                    company:    "XX",
+                    companyURL: "XXX" },
+          ],
+		  previousMaturity: "FPWD",
+	      previousPublishDate:  "2014-22-07",
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.w3.org/community/bpmlod/",
+          wgPublicList: "public-bpmlod",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular WordNets. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
+    This document describes the models used and the design decisions taken during the conversion of WordNet into the well-known lemon representation. More in general, we will describe common patterns that naturally emerge when converting a lexical resource into RDF format.    
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+      <p>There are a number of ways that one may participate in the development of this report:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
+	     for this document can be found on Github.</li>
+      </ul>
+    </section>
+    
+   
+    
+    <section>
+    <h2>What is WordNet?</h2>
+	<p>
+	WordNet is one of the most widely used lexical resources within natural language processing. From the time since the first version of WordNet was released, many resources have been produced that represent complementary information to WordNet  or extend it to other languages .
+	</p>
+	<p>
+	WordNet  is a large lexical database of English nouns, verbs, adjectives and adverbs. Word forms are grouped into more than 117,000 sets of (roughly) synonymous word forms, so called synsets. These are interconnected by bidirectional arcs that stand for lexical (word-word) and semantic (synset-synset) relations, including hyper/hyponymy (tree-oak), meronymy (tree-branch), antonymy (long-short) and various entailment relations (buy-pay, show-see, untie- tie).
+	</p>
+	<p>
+	WordNet’s synsets and its network structure yield a rough measure of semantic similarity among words and concepts in terms of synset membership as well as the number of arcs separating synsets. Due to its availability under open licenses, WordNet has become a popular tool for Word Sense Disambiguation (WSD) and Natural Language Processing in general. WordNets have been built for around 100 different languages. Most are mapped onto the Princeton WordNet, enabling translation on the lexical level as well as cross-lingual WSD and applications. WordNet continues to evolve both in terms of coverage and representation of meaning. Recent enhancements include the addition of internet language and partially compositional multi word units. Finally, WordNet has been mapped to formal ontologies, including SUMO and KYOTO.
+	</p>
+	</section>
+
+<section>
+    <h2>Selection of vocabularies</h2>
+
+	<h3>lemon</h3>
+	<p>
+	lemon is a model that has been proposed  for the representation of lexicons relative to ontologies. As such, this model is well suited to the representation of semantic networks such as WordNet and defines many useful features for linking a WordNet to wider objects in the Semantic Web/Linked Open Data Cloud. lemon models lexicons by means of a core consisting of the following elements:
+	<ul>
+	  <li>A <i>lexical entry</i> which represents a single word or multi-word unit.</li>
+	  <li>A <i>lexical sense</i>, representing a meaning of that word, which contains a reference to a concept in the ontology.</li>
+	  <li><i>Forms</i>, which are inflected versions of the entry, and associated with a string representation.</li>
+	</ul>
+	
+	
+	
+	In fact, in previous work  lemon has been used not only to represent WordNet but to integrate it with more syntactically sophisticated resources such as VerbNet. As such lemon shows potential to help in the integration of lexical data across many levels and languages. The lemon model is highly compatible with the ISO standard LMF  and forms the basis of the work of the <a href="http://www.w3.org/community/ontolex">W3C OntoLex Community Group</a>.
+	</p>
+
+	<h3>SKOS and Custom Vocabulary</h3>
+	<p>
+	In addition, to using the lemon vocabulary to model the semantics of WordNet, we use the SKOS vocabulary as this is better suited to WordNet’s structural model than a formal ontology language such as OWL. Furthermore, we introduce a new vocabulary at <a href="http://wordnet-rdf.princeton.edu/ontology#">http://wordnet-rdf.princeton.edu/ontology#</a> to include properties found only in WordNet.
+	</p>
+</section>
+
+<section>
+    <h2>RDF Generation</h2>
+
+	<h3>Data modelling</h3>
+
+	<div><img alt="An example of the modelling a single word and synset and links to other resources." src="Wn-rdf-example.png"><br>An example of the modelling a single word and synset and links to other resources</div>
+
+	<p>
+	It is not trivial to apply lemon to the case of a WordNet as there is no clear ontology in WordNet. Clearly, WordNet’s words can be regarded as lemon lexical entries and the word senses correspond well to lemon’s lexical senses. WordNet has lemmas and a separate list of variants of these, and as such we create a canonical form for each lemma and a Form object for each of these variants. Since there is currently no indication in WordNet of what grammatical properties these variants have, we do not attach additional properties to these variants/forms. As lemon is a model for ontology-lexica, the main question is what the reference of the lexical senses should be. We choose to regard WordNet’s synsets as ontological references, but instead of assigning them a formal ontological type (e.g., class, property or individual), we introduce a new type Synset as a subclass of Concept in SKOS.
+	</p><p>
+	This allows us to capture the nature of synsets without ontologizing the semantic network. Similarly, we introduce relations such as hypernymy, meronymy etc. as new properties rather than attempt to relate them to existing ontological properties such as OWL’s subClassOf. In order to capture the new properties, we introduce an ontology http://wordnet-rdf.princeton.edu/ontology
+	</p>
+	<p>
+	XXX describing the new properties and classes and provide axioms for the use in the context of both lemon and SKOS.
+	</p>
+	<p>
+	These axioms including stating transitivity constraints and equivalence to other vocabularies, e.g., WordNet’s hypernym to SKOS’s broader. Furthermore, we link the elements in the ontology to data categories from ISOcat.
+	</p>
+
+	<h3>URI design</h3>
+	<p>
+	Another key question concerns the identifiers we use for each element in the data. We do not assign new identifiers but instead we attempt to use the existing identifiers in WordNet. Furthermore, as WordNet has released several versions and is still under development, we consider it important to include the version number in the URI. As such, we use the following scheme for URIs, as exemplified below:
+	
+	<ul>
+	  <li>Each lexical entry is represented by means of the URL-encoded lemma and then a dash followed by the part-of-speech as a single letter (i.e., ‘n(oun)’, ‘v(erb)’, ‘a(djective)’, ‘r (adverb)’, ‘adjective s(atellite)’ or ‘p(article)’).</li>
+	  <li>Senses and forms in the model use the entry URI and add a fragment identifier. For forms for which there is no previous identifier in WordNet, we use CanonicalForm and Form-n where n is a number. For senses, the fragment is the index of the senses and the part of speech.</li>
+	  <li>Synsets are similarly are identified by a number consisting of 8 or 9 digits corresponding to offset codes in the WordNet database The 9 figure codes include an extra initial digit for part-of-speech, followed by a dash and the part of speech as a single letter.</li>
+	</ul>
+		
+	Examples of this scheme include:
+<div>
+<textarea id="example1">
+http://wordnet-rdf.princeton.edu/wn31/cat-n
+http://wordnet-rdf.princeton.edu/wn31/cat-n#CanonicalForm
+http://wordnet-rdf.princeton.edu/wn31/cat-n#2-n
+http://wordnet-rdf.princeton.edu/wn31/300001740-a</textarea>
+</div>
+<script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+	</p>
+
+	<h3>Linking</h3>
+	<p>
+	In addition to providing a RDF/Linked Data version of WordNet, we have incorporated a number of links to other resources. In particular we include the following elements:
+	
+	<ul>
+	  <li>For verbs, we include mappings to VerbNet  if they exist. As VerbNet does not currently have a linked data version, we link to the PHP page of the web site.</li>
+	  <li>We include translations from Open Multilingual WordNet  as simple labels on the synsets, identified by the use of language codes.</li>
+	  <li>We have included previous mappings to LexVo  using the current identifiers in WordNet.</li>
+	  <li>We include links to the W3C WordNet 2.0 export.</li>
+	  <li>We have created new links to lemonUby.</li>
+	</ul>
+
+	In addition to these links, we provide support for legacy resources by adding URL mappings from previous versions of WordNet identifiers to the most recent version. We intend to continue to expand this linksets with contributions from the community.
+	</p>
+
+	<h3>Publication</h3>
+	<p>
+	The data is made available through the <a href="http://github.com/jmccrae/yuzu">Yuzu</a> framework, which allows for custom HTML wrapper to be put over a generic linked data site. In this case, this allows the data to be accessible using content negotiation as either HTML with RDFa annotations, RDF/XML, Turtle, N-Triples or JSON-LD formats. In addition, the data is also available as a single zipped N-Triples file. The main database is served from a SQLite database, but the Yuzu framework supports SPARQL querying either over this database or over an external endpoint (the second option is currently in use).
+    </p>
+    
+   
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</body>
+</html>

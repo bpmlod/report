@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Guidelines for Linguistic Linked Data Generation: Multilingual Terminologies (TBX)</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "babeldict-bpmlod",
+          editors: [
+                {   name:       "XXX",
+                    url:        "XXX",
+                    company:    "XXX",
+                    companyURL: "XXX" },
+          ],
+		  previousMaturity: "FPWD",
+	      previousPublishDate:  "2014-22-07",
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.w3.org/community/bpmlod/",
+          wgPublicList: "public-bpmlod",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular IATE TBX. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
+    This document describes the models used and the design decisions taken during the conversion of IATE into the well-known lemon representation. More in general, we will describe common patterns that naturally emerge when converting a lexical resource into RDF format.    
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+      <p>There are a number of ways that one may participate in the development of this report:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
+	     for this document can be found on Github.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Introduction</h2>
+<p>
+This document provides guidelines on how to convert terminologies represented in the Term Base eXchange (TBX) into the Resource Description Framework (RDF). TBX is an open standard that has been published by the <a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">Localization Industry Standards Association (LISA)</a>. The standard is identical to ISO standard 30042. This document on the one hand describes the vocabularies that are recommended to be used in doing this conversion and describes the structure of the resulting RDF. It builds on standard W3C vocabularies and other vocabularies that are currently in the process of standardization. The conversion has been implemented in the form of a software package that can be used by anyone (see <a href="https://github.com/cimiano/tbx2rdf">here</a>).
+</p>
+</section>
+
+<section>
+      <h2>Selection of vocabularies</h2>
+<p>
+In the following we list the reference models used during the conversion and provide i) in parenthesis the prefix adopted throughout this document; ii) the URL to the model specification.
+
+ <table class="nss">
+	  <caption> <a href="#ns"> Table 1</a>: reference models</caption>
+	  <thead>
+	  <tr>
+	  <th>Model</th>
+	  <th>Prefix</th>
+	  <th>Model reference URL</th>
+	  </tr>
+	  </thead>
+	  <tbody>
+	    <tr><td>
+	    lemon-ontolex
+	    </td><td><b>
+	    lemon-ontolex
+	    </b></td><td>
+	    http://www.w3.org/ns/lemon/ontolex#
+	    </td></tr>
+	    <tr><td>
+	    SKOS
+	    </td><td><b>
+	    skos
+	    </b></td><td>
+	    http://www.w3.org/2004/02/skos/core#
+	    </td></tr>
+	    <tr><td>
+	    RDF-schema
+	    </td><td><b>
+	    rdfs
+	    </b></td><td>
+	    http://www.w3.org/2000/01/rdf-schema#
+	    </td></tr>
+	    <tr><td>
+	    DCAT
+	    </td><td><b>
+	    dcat
+	    </b></td><td>
+	    http://purl.org/dc/terms/
+	    </td></tr>
+	    <tr><td>
+	    VOID
+	    </td><td><b>
+	    void
+	    </b></td><td>
+	    http://rdfs.org/ns/void#
+	    </td></tr>
+	    <tr><td>
+	    PROV-O: The Prov Ontology
+	    </td><td><b>
+	    prov
+	    </b></td><td>
+	    http://www.w3.org/ns/prov#
+	    </td></tr>
+	    <tr><td>
+	    LIDER TBX Ontology
+	    </td><td><b>
+	    tbx
+	    </b></td><td>
+	    http://lider-project.eu/tbx#
+	    </td></tr>
+	  </tbody>
+      </table><br/>
+
+
+We have chosen the <a href="http://www.w3.org/ns/lemon/ontolex">lemon-ontolex vocabulary</a> as the backbone of the conversion of TBX into RDF format. lemon-ontolex is a model proposed for representing lexical information relative to ontologies and for linking lexicons and machine-readable dictionaries to the Semantic Web and the Linked Data cloud. The <a href="http://www.w3.org/ns/lemon/ontolex">lemon-ontolex vocabulary</a> is currently under discussion by the <a href="http://www.w3.org/community/ontolex/">Ontology-Lexicon Community Group</a> that is currently in the process of defining the model. Nevertheless, the model is currently stable enough to build on it.
+</p>
+</section>
+
+<section>
+      <h2>Technical Description of the Conversion</h2>
+
+<h3>The TBX Data Model</h3>
+<div><img alt="The TBX Data Model as an UML diagram." src="TBX_UML.png"><br/>
+The TBX Data Model as an UML diagram.
+</div>
+<p>
+<ul>
+	<li><b>TBX Resource</b>: A TBX resource essentially represents a collection of terminological concepts (Terminological Concept), which are represented as XML elements of type termEntry and have a unique ID. In the above XML snippet, there is one terminological concept with ID 2151845. Each terminological concept is described by a set of properties, such as a subject field they belong to.</li>
+	<li><b>Terminological Concept</b> (term entry): represents a language-independent concept. Each terminological concept is associated to a LangSet (see below), which can be seen as a set of language-specific Terms that express the Terminological Concept in question.</li>
+	<li><b>Langset</b>: A langset is a language-specific containes for all the terms that lexicalize a Terminological Concept in a given language. The Langset contains simple terms, for which no decompositions is provided (TIG), as well as complex terms for which the decomposition information is provided (NTIG).</li>
+	<li><b>Term Information Group (TIG)</b>: represents a language-specific term for which no decomposition information is provided.</li>
+	<li><b>Nesting Term Information Group (NTIG)</b>: represents a language-specific term for which decomposition information is provided.</li>
+	<li><b>TermGrp</b>: contains information about a language-specific term including its morphosyntactic properties; there is one TermGrp for each TIG and NTIG</li>
+	<li><b>TermCompList</b>: represents the decomposition of a term</li>
+	<li><b>TermCompGrp</b>: represents one component of a term and its morphosyntactic properties</li>
+	<li><b>DescrGrp</b>: describes properties of a particular term, in particular different surface forms or describes contexts that document the usage of the term</li>
+	<li><b>TransGrp/Transaction</b>: contains information about a transaction that lead to the creation or modification of a term</li>
+</ul>
+
+
+For a full specification of the TBX data model, please refer to the <a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">TBX DTD</a>.
+</p>
+
+<h3>The lemon-ontolex model</h3>
+<p>
+XXX To BE DONE (John)
+</p>
+
+<h3>Mapping the TBX Data Model to the ontolex-lemon model</h3>
+<p>
+The main data elements described above have been mapped into RDF using the above mentioned vocabularies as follows:
+
+<ul>
+	<li><b>TBX Resource</b>: is not explicitly represented, the whole dataset represents the TBX resources. A TBX resource is thus represented as a void:Dataset. Provenance information is attached, specifying that the data has been converted by the LIDER converter.</li>
+	<li><b>Terminological Concept</b>: is represented as a skos:Concept</li>
+	<li><b>Langset</b>: A langset is not represented as such in the data. Instead, one ontolex:Lexicon is created for each language for which a Langset is defined. The collection of all the terms for a given language will belong to the corresponding language-specific ontolex:Lexicon</li>
+	<li><b>TIG/NTIG</b>: are represented as ontolex:LexicalEntry, no distinction is made between terms with decomposition and terms withouth decomposition; if no decompositions information is available, this is simply omited. In that sense the representation is montonic as the decomposition information can be added later</li>
+	<li><b>TermGrp</b>: the information about the morphosyntactic properties of a term is attached to the corresponding ontolex:LexicalEntry. The string enclosed in &lt;term&gt; &lt;/term&gt; is assumed to be the ontolex:canonicalForm of the lexical entry in question.</li>
+	<li><b>TermCompList</b>: the decomposition of a term is represented using the ontolex:decomp vocabulary, creating a decomp:Component and ontolex:LexicalEntry for each component.</li>
+	<li><b>TermCompGrp</b>: the morphosyntactic properties of a component are attached to the corresponding lexical entry that is identified (through decomp:identifies) with the component in question)</li>
+	<li><b>DescrGrp</b>: descriptions of the term or context are mapped to appropriate properties of the lexical entry ort he context</li>
+	<li><b>TransGrp/Transaction</b>: a transaction that creates or modifies the term is mapped to a tbx:Transaction (a subclass of prov:Activity). Provenance metadata is attached to this entity. The prov:Activity related to the responsible person or agent through prov:wasAssociatedWith; the relation to the responsible Agent is encoded via prov:wasGeneratedBy.</li>
+</ul>
+
+</p>
+<h3>Conversion examples</h3>
+<p>
+In this section we provide some examples of excerpts of real TBX documents and how they are converted into RDF following the above guidelines. The example are real example taken from the <a href="http://iate.europa.eu/tbxPageDownload.do">IATE terminology</a>.
+<h4>Converting terminological concepts and terms</h4>
+      <div>
+      <textarea id="example1">
+<martif type="TBX-Default" xml:lang="en">
+  <martifHeader>
+    <fileDesc>
+      <sourceDesc>
+        <p>This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <p type="XCSURI">TBXXCS.xcs</p>
+    </encodingDesc>
+  </martifHeader>
+ <text>
+    <body>
+      <termEntry id="IATE-84">
+        <descripGrp>
+          <descrip type="subjectField">1011</descrip>
+        </descripGrp>
+	<langSet xml:lang="de">
+          <tig>
+            <term>Zuständigkeit der Mitgliedstaaten</term>
+            <termNote type="termType">fullForm</termNote>
+            <descrip type="reliabilityCode">3</descrip>
+          </tig>
+	</langSet>
+        <langSet xml:lang="en">
+          <tig>
+            <term>competence of the Member States</term>
+            <termNote type="termType">fullForm</termNote>
+            <descrip type="reliabilityCode">3</descrip>
+          </tig>
+        </langSet> 
+	 <langSet xml:lang="es">
+          <tig>
+            <term>competencias de los Estados miembros</term>
+            <termNote type="termType">fullForm</termNote>
+            <descrip type="reliabilityCode">3</descrip>
+          </tig>
+        </langSet>
+  </termEntry>
+</body>
+</text>	
+</martif></textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+
+      The resulting RDF would looks as follows:
+      <div>
+      <textarea id="example2">
+
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix :      <file:samples/simple1.rdf> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tbx:   <http://tbx2rdf.lider-project.eu/tbx#> .
+@prefix gr:    <http://purl.org/goodrelations/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ontolex: <http://www.w3.org/ns/ontolex#> .
+@prefix ldr:   <http://purl.oclc.org/NET/ldr/ns#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+
+:       a                 tbx:MartifHeader , dcat:Dataset ;
+        <http://purl.org/dc/elements/1.1/source>
+                "This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu." ;
+        dct:type          "TBX-Default" ;
+        tbx:encodingDesc  "<p type=\"XCSURI\">TBXXCS.xcs</p>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> ;
+        tbx:sourceDesc    "<sourceDesc><p>This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p></sourceDesc>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> .
+
+:Lexicon_de  a            ontolex:Lexicon ;
+        ontolex:entry     :LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab ;
+        ontolex:language  "de" .
+
+:Lexicon_es  a            ontolex:Lexicon ;
+        ontolex:entry     :LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f ;
+        ontolex:language  "es" .
+
+:Lexicon_en  a            ontolex:Lexicon ;
+        ontolex:entry     :LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da ;
+        ontolex:language  "en" .
+
+:LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da
+        a                      ontolex:LexicalEntry ;
+        tbx:reliabilityCode    "3"^^tbx:reliabilityCode ;
+        tbx:termType           tbx:fullForm ;
+        ontolex:canonicalForm  :LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da-CanonicalForm ;
+        ontolex:language       "en" ;
+        ontolex:sense          :LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da-Sense .
+
+:LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f-CanonicalForm
+        ontolex:writtenRep  "competencias de los Estados miembros"@es .
+
+:LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab-Sense
+        ontolex:reference  :Term-96ecadd1-e352-4e87-927a-6f3ab5a550ba .
+
+:Term-96ecadd1-e352-4e87-927a-6f3ab5a550ba
+        a                 <<http://www.w3.org/2004/02/skos/core#Concept> ;
+        tbx:subjectField  "1011"^^tbx:subjectField .
+
+:LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f-Sense
+        ontolex:reference  :Term-96ecadd1-e352-4e87-927a-6f3ab5a550ba .
+
+:LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab
+        a                      ontolex:LexicalEntry ;
+        tbx:reliabilityCode    "3"^^tbx:reliabilityCode ;
+        tbx:termType           tbx:fullForm ;
+        ontolex:canonicalForm  :LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab-CanonicalForm ;
+        ontolex:language       "de" ;
+        ontolex:sense          :LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab-Sense .
+
+:LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da-Sense
+        ontolex:reference  :Term-96ecadd1-e352-4e87-927a-6f3ab5a550ba .
+
+:LexicalEntry-2d10ceeb-2db2-4b9d-9ffb-bfc0b28a63ab-CanonicalForm
+        ontolex:writtenRep  "Zuständigkeit der Mitgliedstaaten"@de .
+
+:LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f
+        a                      ontolex:LexicalEntry ;
+        tbx:reliabilityCode    "3"^^tbx:reliabilityCode ;
+        tbx:termType           tbx:fullForm ;
+        ontolex:canonicalForm  :LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f-CanonicalForm ;
+        ontolex:language       "es" ;
+        ontolex:sense          :LexicalEntry-b91ad96c-a45f-403a-969c-2a88a49eef9f-Sense .
+
+
+:LexicalEntry-6759a1c9-2b9a-4c5f-9a95-9d744ea0f3da-CanonicalForm
+        ontolex:writtenRep  "competence of the Member States"@en .</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example2"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+Note that the terminology entry has been represented as a skos:Concept, which gets assigned a subjecField (1011 in this case). Further, there is one lexicon object for each of the three languages (en,de,es) containing one lexical entry for the corresponding term. A sense has been introduced to represent the meaning of each of these lexical entry a referring to the correspoding terminology concept.
+
+<h4>Converting term decomposition information</h4>
+The following example extends the previous one by adding decomposition information for one term:
+      <div>
+      <textarea id="example3">
+<?xml version="1.0" encoding="utf-8"?>
+<martif type="TBX-Default" xml:lang="en">
+  <martifHeader>
+    <fileDesc>
+      <sourceDesc>
+        <p>This is a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <p type="XCSURI">TBXXCS.xcs</p>
+    </encodingDesc>
+  </martifHeader>
+  <text>
+  <body><termEntry id="IATE-14">
+  <descrip type="subjectField">1011</descrip>
+   <langSet xml:lang="en">
+    <ntig>
+      <termGrp>
+	 <term>competence of the Member States</term>
+         <termNote type="termType">fullForm</termNote>
+         <descrip type="reliabilityCode">3</descrip>
+        <termCompList type="lemma">
+          <termCompGrp>
+            <termComp>competence</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+            <termNote type="grammaticalNumber">singular</termNote>
+          </termCompGrp>
+          <termCompGrp>
+            <termComp>of</termComp>
+            <termNote type="partOfSpeech">other</termNote>
+          </termCompGrp>
+          <termCompGrp>
+            <termComp>the</termComp>
+            <termNote type="partOfSpeech">other</termNote>
+          </termCompGrp>
+	   <termCompGrp>
+            <termComp>Member</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+	     <termNote type="grammaticalNumber">singular</termNote>	
+          </termCompGrp>
+	   <termCompGrp>
+            <termComp>States</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+            <termNote type="grammaticalNumber">plural</termNote>
+          </termCompGrp>
+        </termCompList>
+      </termGrp>
+    </ntig>
+   </langSet>
+</termEntry>
+</body>
+</text>
+</martif></textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example3"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+The resulting RDF would look as follows:
+      <div>
+      <textarea id="example4">
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix :      <file:samples/simple_with_decomposition.rdf> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tbx:   <http://tbx2rdf.lider-project.eu/tbx#> .
+@prefix gr:    <http://purl.org/goodrelations/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ontolex: <http://www.w3.org/ns/ontolex#> .
+@prefix ldr:   <http://purl.oclc.org/NET/ldr/ns#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+
+:       a                 tbx:MartifHeader ;
+        <http://purl.org/dc/elements/1.1/source>
+                "This is a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu." ;
+        dct:type          "TBX-Default" ;
+        tbx:encodingDesc  "<p type=\"XCSURI\">TBXXCS.xcs</p>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> ;
+        tbx:sourceDesc    "<sourceDesc><p>This is a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p></sourceDesc>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> .
+:Lexicon_en  a            ontolex:Lexicon ;
+        ontolex:entry     :LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a ;
+        ontolex:language  "en" .
+
+:Term-6104f578-8359-4004-a904-f186a5c01fc1
+        a                 <<http://www.w3.org/2004/02/skos/core#Concept> ;
+        tbx:subjectField  "1011"@en .
+
+:LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a-Sense
+        ontolex:reference  :Term-6104f578-8359-4004-a904-f186a5c01fc1 .
+
+:TermComp-1aca99b1-ab82-4924-9dea-ef5c581408bd
+        a                 ontolex:LexicalEntry ;
+        rdfs:label        "the"@en ;
+        tbx:partOfSpeech  tbx:other ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-1aca99b1-ab82-4924-9dea-ef5c581408bd .
+
+:LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a-CanonicalForm
+        ontolex:writtenRep  "competence of the Member States"@en .
+
+:TermComp-0ab24893-3f57-4f0c-8f53-42dc12b79107
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "Member"@en ;
+        tbx:grammaticalNumber  tbx:singular ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-0ab24893-3f57-4f0c-8f53-42dc12b79107 .
+
+:TermComp-e9f4b191-9356-49bb-bde1-e3d61b2f2da5
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "competence"@en ;
+        tbx:grammaticalNumber  tbx:singular ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-e9f4b191-9356-49bb-bde1-e3d61b2f2da5 .
+
+:TermCompList-581d978b-ab24-44a9-95bc-9b5f5e21e21b
+        <http://www.w3.org/ns/decomp#constituent>
+                :TermComp-0bff3192-f6db-4b62-805b-63ba0c23bd72 , :TermComp-0ab24893-3f57-4f0c-8f53-42dc12b79107 , :TermComp-1aca99b1-ab82-4924-9dea-ef5c581408bd , :TermComp-d7d1d67c-c4d3-4465-94ab-0b5866f55735 , :TermComp-e9f4b191-9356-49bb-bde1-e3d61b2f2da5 ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a .
+
+:LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a
+        a                      ontolex:LexicalEntry ;
+        tbx:termType           tbx:fullForm ;
+        ontolex:canonicalForm  :LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a-CanonicalForm ;
+        ontolex:language       "en" ;
+        ontolex:sense          :LexicalEntry-2228c6fe-a23f-4ff7-af11-072cec346d8a-Sense .
+
+:TermComp-0bff3192-f6db-4b62-805b-63ba0c23bd72
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "States"@en ;
+        tbx:grammaticalNumber  tbx:plural ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-0bff3192-f6db-4b62-805b-63ba0c23bd72 .
+
+:TermComp-d7d1d67c-c4d3-4465-94ab-0b5866f55735
+        a                 ontolex:LexicalEntry ;
+        rdfs:label        "of"@en ;
+        tbx:partOfSpeech  tbx:other ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-d7d1d67c-c4d3-4465-94ab-0b5866f55735 .</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example4"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+The above example shows how one terminological entry with one term in English has been transformed into ontolex-based RDF. Note that in this case only one lexicon has been created. Further, to represent the composition information, a TermCompList object has been created that lists all constituents of the complex terms corresponding to each of the words that make up the compound. Each constituent is associated to a corresponding lexical entry that links to the corresponding constituent through the identified relation.
+<h4>Converting transaction information</h4>
+The following example adds transaction information to one term:
+      <div>
+      <textarea id="example5">
+<?xml version="1.0" encoding="utf-8"?>
+<martif type="TBX-Default" xml:lang="en">
+  <martifHeader>
+    <fileDesc>
+      <sourceDesc>
+        <p>This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <p type="XCSURI">TBXXCS.xcs</p>
+    </encodingDesc>
+  </martifHeader>
+  <text>
+  <body><termEntry id="IATE-14">
+  <descrip type="subjectField">1011</descrip>
+   <langSet xml:lang="en">
+    <ntig>
+      <termGrp>
+	 <term>competence of the Member States</term>
+         <termNote type="termType">fullForm</termNote>
+         <descrip type="reliabilityCode">3</descrip>
+        <termCompList type="lemma">
+          <termCompGrp>
+            <termComp>competence</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+            <termNote type="grammaticalNumber">singular</termNote>
+          </termCompGrp>
+          <termCompGrp>
+            <termComp>of</termComp>
+            <termNote type="partOfSpeech">other</termNote>
+          </termCompGrp>
+          <termCompGrp>
+            <termComp>the</termComp>
+            <termNote type="partOfSpeech">other</termNote>
+          </termCompGrp>
+	   <termCompGrp>
+            <termComp>Member</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+	     <termNote type="grammaticalNumber">singular</termNote>	
+          </termCompGrp>
+	   <termCompGrp>
+            <termComp>States</termComp>
+            <termNote type="partOfSpeech">noun</termNote>
+            <termNote type="grammaticalNumber">plural</termNote>
+          </termCompGrp>
+        </termCompList>
+      </termGrp>
+      <transacGrp>
+        <transac type="transactionType">origination</transac>
+        <transacNote type="responsibility">PC</transacNote>
+        <date>2014-05-08</date>
+      </transacGrp>
+      <transacGrp>
+        <transac type="transactionType">approval</transac>
+        <transacNote type="responsibility">PC</transacNote>
+        <date>2014-05-16T14:50:42.018Z</date>
+      </transacGrp>
+      <admin type="status">approved</admin>
+      <transacGrp>
+        <transac type="transactionType">modification</transac>
+        <transacNote type="responsibility">PC</transacNote>
+        <date>2014-05-16T14:59:00.814Z</date>
+      </transacGrp>
+    </ntig>
+   </langSet>
+</termEntry>
+</body>
+</text>
+</martif></textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example5"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+
+The resulting RDF would look as follows:
+<div>
+      <textarea id="example6">
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix :      <file:samples/simple_with_decomp_trans.rdf> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tbx:   <http://tbx2rdf.lider-project.eu/tbx#> .
+@prefix gr:    <http://purl.org/goodrelations/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ontolex: <http://www.w3.org/ns/ontolex#> .
+@prefix ldr:   <http://purl.oclc.org/NET/ldr/ns#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+
+:       a                 tbx:MartifHeader , dcat:Dataset ;
+        <http://purl.org/dc/elements/1.1/source>
+                "This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu." ;
+        dct:type          "TBX-Default" ;
+        tbx:encodingDesc  "<p type=\"XCSURI\">TBXXCS.xcs</p>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> ;
+        tbx:sourceDesc    "<sourceDesc><p>This is an excerpt of a TBX file downloaded from the IATE website. Address any enquiries to iate@cdt.europa.eu.</p></sourceDesc>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral> .
+
+:Lexicon_en  a            ontolex:Lexicon ;
+        ontolex:entry     :LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6 ;
+        ontolex:language  "en" .
+
+:LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6
+        a                           ontolex:LexicalEntry ;
+        <http://myproperty/status>  "approved"^^<http://myproperty/status> ;
+        tbx:termType                tbx:fullForm ;
+        tbx:transaction             :TransacGrp-306a67e3-cf0d-4c20-af4d-38e1f42d1487 , :TransacGrp-7f2e3d2e-7639-4ff1-afe2-e131078b1334 , :TransacGrp-87989e8f-3e53-4c54-974f-72bdee3e25fe ;
+        ontolex:canonicalForm       :LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6-CanonicalForm ;
+        ontolex:language            "en" ;
+        ontolex:sense               :LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6-Sense .
+
+:LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6-CanonicalForm
+        ontolex:writtenRep  "competence of the Member States"@en .
+
+:TermCompList-319356e5-ae82-4d2d-9ef1-35bfefee9c57
+        <http://www.w3.org/ns/decomp#constituent>
+                :TermComp-5de261a7-2092-4b22-8a08-4b450fb9a1fe , :TermComp-0b0ad58e-e2ba-42eb-9c99-415fe6b6fc18 , :TermComp-c94a5d19-3aa8-4ff0-8f6a-38b4b6c15d59 , :TermComp-4ba2b9da-cda9-4fd1-abb6-eec7344ee763 , :TermComp-c0b624f0-5cc2-4f14-9f63-7e6270ed52d4 ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6 .
+
+:TermComp-0b0ad58e-e2ba-42eb-9c99-415fe6b6fc18
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "Member"@en ;
+        tbx:grammaticalNumber  tbx:singular ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-0b0ad58e-e2ba-42eb-9c99-415fe6b6fc18 .
+
+:TransacGrp-7f2e3d2e-7639-4ff1-afe2-e131078b1334
+        a                       prov:Activity , tbx:transaction ;
+        tbx:transactionType     "approval"^^tbx:transactionType ;
+        prov:endedAtTime        "2014-05-16T14:50:42.018Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        prov:wasAssociatedWith  :TransacNote-41238152-7acf-4353-8479-46e3ff068757 .
+
+:TransacNote-41238152-7acf-4353-8479-46e3ff068757
+        a           prov:Agent ;
+        rdfs:label  "PC" .
+
+:TermComp-c94a5d19-3aa8-4ff0-8f6a-38b4b6c15d59
+        a                 ontolex:LexicalEntry ;
+        rdfs:label        "the"@en ;
+        tbx:partOfSpeech  tbx:other ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-c94a5d19-3aa8-4ff0-8f6a-38b4b6c15d59 .
+
+:TransacGrp-306a67e3-cf0d-4c20-af4d-38e1f42d1487
+        a                       prov:Activity , tbx:transaction ;
+        tbx:transactionType     "modification"^^tbx:transactionType ;
+        prov:endedAtTime        "2014-05-16T14:59:00.814Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        prov:wasAssociatedWith  :TransacNote-2e0fd885-5624-4e6f-b52d-6e1ebcef9ada .
+
+:TransacNote-2e0fd885-5624-4e6f-b52d-6e1ebcef9ada
+        a           prov:Agent ;
+        rdfs:label  "PC" .
+
+:TermComp-5de261a7-2092-4b22-8a08-4b450fb9a1fe
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "States"@en ;
+        tbx:grammaticalNumber  tbx:plural ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-5de261a7-2092-4b22-8a08-4b450fb9a1fe .
+
+:LexicalEntry-7fd6e53c-1da9-4419-a5e1-3e52d8c8b4b6-Sense
+        ontolex:reference  :Term-77d008db-5141-434c-a25c-7b34aaac76d4 .
+
+:TermComp-4ba2b9da-cda9-4fd1-abb6-eec7344ee763
+        a                 ontolex:LexicalEntry ;
+        rdfs:label        "of"@en ;
+        tbx:partOfSpeech  tbx:other ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-4ba2b9da-cda9-4fd1-abb6-eec7344ee763 .
+
+:TransacGrp-87989e8f-3e53-4c54-974f-72bdee3e25fe
+        a                       prov:Activity , tbx:transaction ;
+        tbx:transactionType     "origination"^^tbx:transactionType ;
+        prov:endedAtTime        "2014-05-08"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        prov:wasAssociatedWith  :TransacNote-4f64b4fe-0478-4a9e-bb7a-20a54ce17242 .
+
+:TransacNote-4f64b4fe-0478-4a9e-bb7a-20a54ce17242
+        a           prov:Agent ;
+        rdfs:label  "PC" .
+
+:Term-77d008db-5141-434c-a25c-7b34aaac76d4
+        a                 <<http://www.w3.org/2004/02/skos/core#Concept> ;
+        tbx:subjectField  "1011"^^tbx:subjectField .
+
+:TermComp-c0b624f0-5cc2-4f14-9f63-7e6270ed52d4
+        a                      ontolex:LexicalEntry ;
+        rdfs:label             "competence"@en ;
+        tbx:grammaticalNumber  tbx:singular ;
+        tbx:partOfSpeech       tbx:noun ;
+        <http://www.w3.org/ns/decomp#identifies>
+                :TermComp-c0b624f0-5cc2-4f14-9f63-7e6270ed52d4 .</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example6"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
+This example extends the previous example by transactions. Note that each transaction element has been mapped to a <b>tbx:Transaction</b> element and declared as having type <b>prov:Activity</b>. The transction type as originating form the data is faitfhfully represented. The data of the transaction is mapped to the property <b>prov:endedAtTime</b> and the responsible field has been mapped to the property prov:wasAssociatedWith. The date has been represented as the property <b>prov:endedAtDate</b> and the associated responsible has been represented via the <b>property prov:isAssociatedWith</b>. The admin status "approved" has been mapped to a proprietary property &lt;http://myproperty/status&gt; as it is not defined in the TBX standard.
+</section>
+
+<section><h2>Data querying</h2>
+<p>
+In order to show how the model can be used, we give a number of queries that demonstrate data access to the model.
+</p>
+
+<h4>Indicate the number of terminological concepts in the resource</h4>
+
+<div>
+      <textarea id="example7">
+select distinct count(?Concept) from <http://tbx2rdf.lider-project.eu/> where {
+  ?Concept a <http://www.w3.org/2004/02/skos/core#Concept> 
+} </textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example7"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+      
+<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=select+distinct+count%28%3FConcept%29+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+{%3FConcept+a+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23Concept%3E+}+&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
+<h4>Indicates all the languages of terms included in the resource</h4>
+<div>
+      <textarea id="example10">
+select distinct ?language from <http://tbx2rdf.lider-project.eu/> where { 
+  ?c <http://www.w3.org/ns/lemon/ontolex#language> ?language 
+}</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example10"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=select+distinct+%3Flanguage+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+%7B+%0D%0A++%3Fc+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Flemon%2Fontolex%23language%3E+%3Flanguage+%0D%0A%7D&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
+<h4>XXXRetrieve all the canonical forms for a given terminological concept in all languages, with indication of the language tag</h4>
+      <div>
+      <textarea id="example9">
+PREFIX ontolex: <http://www.w3.org/ns/ontolex#> 
+
+select distinct ?cf from <http://tbx2rdf.lider-project.eu/> where { 
+  ?sense ontolex:reference <http://tbx2rdf.lider-project.eu#Term-0327f3e6-6b69-4ba1-81f8-6425b858a0af> .
+  ?entry ontolex:sense ?sense ;
+    ontolex:canonicalForm ?form .
+  ?form ontolex:writtenRep ?cf .
+} limit 100</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example9"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+{+%0D%0A++%3Fsense+ontolex%3Areference+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%23Term-0327f3e6-6b69-4ba1-81f8-6425b858a0af%3E+.%0D%0A++%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++++ontolex%3AcanonicalForm+%3Fform+.%0D%0A++%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A}+limit+100&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
+<h4>XXXRetrieve all terms by subject field</h4>
+      <div>
+      <textarea id="example8">
+PREFIX ontolex: <http://www.w3.org/ns/ontolex#> 
+
+select distinct ?c ?cf from <http://tbx2rdf.lider-project.eu/> where { 
+  ?c a <http://www.w3.org/2004/02/skos/core#Concept> ; 
+    <http://tbx2rdf.lider-project.eu/tbx#subjectField> "1011"^^<http://tbx2rdf.lider-project.eu/tbx#subjectField> .
+  ?sense ontolex:reference ?c .
+  ?entry ontolex:sense ?sense ;
+    ontolex:canonicalForm ?form .
+  ?form ontolex:writtenRep ?cf .
+} LIMIT 100</textarea>
+      </div>
+      <script>CodeMirror.fromTextArea(document.getElementById("example8"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+
+<a href=http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fc+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+{+%3Fc+a+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23Concept%3E+%3B+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Ftbx%23subjectField%3E+%221011%22^^%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Ftbx%23subjectField%3E+.%0D%0A%3Fsense+ontolex%3Areference+%3Fc+.%0D%0A%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++ontolex%3AcanonicalForm+%3Fform+.%0D%0A%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A%0D%0A}+LIMIT+100&format=text%2Fhtml&timeout=0&debug=on"">Try it out</a>
+
+</section>
+<section>
+<h2>Implementation</h2>
+<p>
+A converter has been implemented to map TBX/XML input into RDF using the vocabularies described above. The converter has been implemented as a Java program that reads in the document and builds the DOM tree. The DOM tree is traversed and elements are mapped to appropriate object-oriented datastructures. These datastructures are then serialized as RDF. The code is available as GitHub project <a href="https://github.com/cimiano/tbx2rdf">tbx2rdf</a>.
+</p>
+<p>
+As additional input to the program, a file can be provided that contains mappings of specific XML elements and attributes used in the TBX document to URIs representing properties. If no file is specified the default file "default.mappings" is used. This option is only available when directly executing the Java program, not via the Web service.
+</p>
+<p>
+A service for converting TBX to RDF is available <a href="http://tbx2rdf.lider-project.eu/converter">here</a>.
+</p>
+</section>
+<section><h2>References</h2>
+<p>
+<a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">TBX Standard as published by LISA</a><br/>
+<a href="https://github.com/cimiano/tbx2rdf">tbx2rdf GitHub Project</a><br/>
+   </p>
+   </section>
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</body>
+</html>
