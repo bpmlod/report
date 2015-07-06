@@ -23,6 +23,12 @@
                     company:    "Ontology Engineering Group, Universidad Politécnica de Madrid",
                     companyURL: "http://www.oeg-upm.net/" }
           ],
+		  contributors: [
+                {   name:       "Jorge Gracia",
+                    url:        "http://purl.org/net/jorge-gracia",
+                    company:    "Ontology Engineering Group, Universidad Politécnica de Madrid",
+                    companyURL: "http://www.oeg-upm.net/" }
+          ],
 		  previousMaturity: "FPWD",
 	      previousPublishDate:  "2014-03-07",
           wg:           "Best Practices for Multilingual Linked Open Data",
@@ -212,7 +218,7 @@ Apertium English-Spanish translation set: <code> http://linguistic.linkeddata.es
 
 	</pre>
 
-	 In order to construct the URIs of the lexical entries, senses, and rest of lexical elements, we have <i>preserved the identifiers of the original data whenever possible</i>, propagating them into the RDF representation. Some minor changes have been introduced, though. For instance, in the original data the identifier of the lexical entries ended with the particle "-l" or "-r" depending on their role as "source" or "target" in the translation. In our case, the directionality is not preserved at the level of Lexicon (but in the Translation class) so these particles are removed form the name. In addition, some other suffixes have been added for readability (this step is optional): "-form" for lexical forms, "-sense" for lexical senses, and "-trans" or translation. See the following section "generation" for particular examples.
+	 In order to construct the URIs of the lexical entries, senses, and rest of lexical elements, we have <i>preserved the identifiers of the original data whenever possible</i>, propagating them into the RDF representation. Some minor changes have been introduced, though. For instance, in the original data the identifier of the lexical entries ended with the particle "-l" or "-r" depending on their role as "source" or "target" in the translation. In our case, the directionality is not preserved at the level of Lexicon (but in the Translation class) so these particles are removed form the name. In addition, some other suffixes have been added for readability (this step is optional): "-form" for lexical forms, "-sense" for lexical senses, and "-trans" for translation. See the following section "generation" for particular examples.
 	</p>
 	</section>
     
