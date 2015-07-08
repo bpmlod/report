@@ -134,7 +134,7 @@
 	 <li> <em> Data model</em>. All available information about the data model used in the sources has to be analysed, comprising standards, terminologies, etc. 
 	 <li> <em> Content</em>. The data underlying such models has to be analysed also, and their linguistic features examined: e.g., to identify language dependent/independent information, to understand how names and identifiers have been constructed in the source data, how language have been encoded, etc. 	
 	 </ul>
-	 The result of this phase is strongly dependent on the particular data source and its representation formalism. The general advise would be to get a good understanding of how the original dictionary is represented in order to define proper conversion rules of the original data into RDF.
+	 The result of this phase is strongly dependent on the particular data source and its representation formalism. The general advice would be to get a good understanding of how the original dictionary is represented in order to define proper conversion rules of the original data into RDF.
 	</p><p>
 
 	Regarding our illustrating example (the Apertium EN-ES dictionary), the model used for representing the data is [<cite><a href="#bib-lmf">LMF</a></cite>]. The following lines of code illustrate how the content is represented in LMF/XML for a single translation:
@@ -223,7 +223,7 @@ Apertium English-Spanish translation set: <code> http://linguistic.linkeddata.es
 
 	</pre>
 
-	 In order to construct the URIs of the lexical entries, senses, and rest of lexical elements, we have <i>preserved the identifiers of the original data whenever possible</i>, propagating them into the RDF representation. Some minor changes have been introduced, though. For instance, in the original data the identifier of the lexical entries ended with the particle "-l" or "-r" depending on their role as "source" or "target" in the translation. In our case, the directionality is not preserved at the level of Lexicon (but in the Translation class) so these particles are removed form the name. In addition, some other suffixes have been added for readability (this step is optional): "-form" for lexical forms, "-sense" for lexical senses, and "-trans" for translation. See the following section "generation" for particular examples.
+	 In order to construct the URIs of the lexical entries, senses, and rest of lexical elements, we have <i>preserved the identifiers of the original data whenever possible</i>, propagating them into the RDF representation. Some minor changes have been introduced, though. For instance, in the original data the identifier of the lexical entries ended with the particle "-l" or "-r" depending on their role as "source" or "target" in the translation. In our case, the directionality is not preserved at the level of Lexicon (but in the Translation class) so these particles are removed from the name. In addition, some other suffixes have been added for readability (this step is optional): "-form" for lexical forms, "-sense" for lexical senses, and "-trans" for translation. See the following section "generation" for particular examples.
 	</p>
 	</section>
     
@@ -326,7 +326,7 @@ the context of Linked Data, there are two major vocabularies for publishing meta
 
     
 <dt id="bib-ap_paper">[AP_PAPER]</dt>
-<dd> M. Forcada, M. Ginestí-Rosell, J. Nordfalk, J. O'Regan, S. Ortiz-Rojas, J. Pérez-Ortiz, F. Sánchez-Martínez, G. Ramírez-Sánchez, and F. Tyers,  <a href="http://www.dlsi.ua.es/~mlf/tmp/apertium-paper-2011.pdf"> <cite>Apertium: a free/open-source platform for rule-based machine translation </cite></a>. Machine Translation, vol. 25, no. 2, pp. 127-144, 2011. 
+<dd> M. Forcada, M. Ginestí-Rosell, J. Nordfalk, J. O'Regan, S. Ortiz-Rojas, J. Pérez-Ortiz, F. Sánchez-Martínez, G. Ramírez-Sánchez, and F. Tyers,  <a href="http://link.springer.com/article/10.1007%2Fs10590-011-9090-0"> <cite>Apertium: a free/open-source platform for rule-based machine translation </cite></a>. Machine Translation, vol. 25, no. 2, pp. 127-144, 2011. 
 
 <dt id="bib-ap_rdf">[AP_RDF]</dt>
 <dd>RDF version of the Apertium bilingual dictionaries. URL: <a href="http://linguistic.linkeddata.es/apertium/">http://linguistic.linkeddata.es/apertium/</a>
