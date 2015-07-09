@@ -702,34 +702,36 @@ select distinct ?language from <http://tbx2rdf.lider-project.eu/> where {
 <h4>XXXRetrieve all the canonical forms for a given terminological concept in all languages, with indication of the language tag</h4>
       <div>
       <textarea id="example9">
-PREFIX ontolex: <http://www.w3.org/ns/ontolex#> 
+PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#> 
 
 select distinct ?cf from <http://tbx2rdf.lider-project.eu/> where { 
-  ?sense ontolex:reference <http://tbx2rdf.lider-project.eu#Term-0327f3e6-6b69-4ba1-81f8-6425b858a0af> .
+  ?sense ontolex:reference <http://tbx2rdf.lider-project.eu/data/Term-58db1b25-dd34-456a-b9d7-a9e960348883> .
   ?entry ontolex:sense ?sense ;
     ontolex:canonicalForm ?form .
   ?form ontolex:writtenRep ?cf .
-} limit 100</textarea>
+} limit 100
+</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example9"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
-<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+{+%0D%0A++%3Fsense+ontolex%3Areference+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%23Term-0327f3e6-6b69-4ba1-81f8-6425b858a0af%3E+.%0D%0A++%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++++ontolex%3AcanonicalForm+%3Fform+.%0D%0A++%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A}+limit+100&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
+<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Flemon%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+%7B+%0D%0A++%3Fsense+ontolex%3Areference+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Fdata%2FTerm-58db1b25-dd34-456a-b9d7-a9e960348883%3E+.%0D%0A++%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++++ontolex%3AcanonicalForm+%3Fform+.%0D%0A++%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A%7D+limit+100&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
 <h4>XXXRetrieve all terms by subject field</h4>
       <div>
       <textarea id="example8">
-PREFIX ontolex: <http://www.w3.org/ns/ontolex#> 
+PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#> 
 
 select distinct ?c ?cf from <http://tbx2rdf.lider-project.eu/> where { 
   ?c a <http://www.w3.org/2004/02/skos/core#Concept> ; 
-    <http://tbx2rdf.lider-project.eu/tbx#subjectField> "1011"^^<http://tbx2rdf.lider-project.eu/tbx#subjectField> .
+    <http://tbx2rdf.lider-project.eu/tbx#subjectField> "1011"^^<http://www.w3.org/2001/XMLSchema#string> .
   ?sense ontolex:reference ?c .
   ?entry ontolex:sense ?sense ;
     ontolex:canonicalForm ?form .
   ?form ontolex:writtenRep ?cf .
-} LIMIT 100</textarea>
+} LIMIT 100
+</textarea>
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example8"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
-<a href=http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fc+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+{+%3Fc+a+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23Concept%3E+%3B+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Ftbx%23subjectField%3E+%221011%22^^%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Ftbx%23subjectField%3E+.%0D%0A%3Fsense+ontolex%3Areference+%3Fc+.%0D%0A%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++ontolex%3AcanonicalForm+%3Fform+.%0D%0A%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A%0D%0A}+LIMIT+100&format=text%2Fhtml&timeout=0&debug=on"">Try it out</a>
+<a href="http://lider2.dia.fi.upm.es:8891/sparql?default-graph-uri=&query=PREFIX+ontolex%3A+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Flemon%2Fontolex%23%3E+%0D%0A%0D%0Aselect+distinct+%3Fc+%3Fcf+from+%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2F%3E+where+%7B+%0D%0A++%3Fc+a+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23Concept%3E+%3B+%0D%0A++++%3Chttp%3A%2F%2Ftbx2rdf.lider-project.eu%2Ftbx%23subjectField%3E+%221011%22%5E%5E%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23string%3E+.%0D%0A++%3Fsense+ontolex%3Areference+%3Fc+.%0D%0A++%3Fentry+ontolex%3Asense+%3Fsense+%3B%0D%0A++++ontolex%3AcanonicalForm+%3Fform+.%0D%0A++%3Fform+ontolex%3AwrittenRep+%3Fcf+.%0D%0A%7D+LIMIT+100&format=text%2Fhtml&timeout=0&debug=on">Try it out</a>
 
 </section>
 <section>
