@@ -27,6 +27,14 @@
                     url:        "http://wwwusers.di.uniroma1.it/~flati",
                     company:    "LCL group, Sapienza University of Rome",
                     companyURL: "http://lcl.uniroma1.it/" },
+                {   name:       "Andrea Moro",
+                    url:        "http://wwwusers.di.uniroma1.it/~moro",
+                    company:    "LCL group, Sapienza University of Rome",
+                    companyURL: "http://lcl.uniroma1.it/" },
+                {   name:       "Luca Matteis",
+                    url:        "http://wwwusers.di.uniroma1.it/~matteis",
+                    company:    "LCL group, Sapienza University of Rome",
+                    companyURL: "http://lcl.uniroma1.it/" },
 		{   name:       "Roberto Navigli",
                     url:        "http://wwwusers.di.uniroma1.it/~navigli",
                     company:    "LCL group, Sapienza University of Rome",
@@ -50,14 +58,12 @@
   <body>
     <section id='abstract'>
       <p> 
-    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular BabelNet. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
+    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular BabelNet. These guidelines contain advice on the vocabularies selection, RDF generation process and publication of the results. As a result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
     This document describes the models used and the design decisions taken during the conversion of BabelNet into the well-known lemon representation. More in general, we will describe common patterns that naturally emerge when converting a lexical resource into RDF format.    
       </p>
     </section>
 
     <section id='sotd'>
-      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
-       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
       <p>There are a number of ways that one may participate in the development of this report:</p>
       <ul>
       <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
@@ -73,17 +79,17 @@
     <section>
       <h2>Description of the type of resource</h2>
       <p>
-      BabelNet is a a very large multilingual encyclopedic dictionary and ontology covering 271 languages, and created by 1) the automatic, seamless integration of WordNet with Wikipedia, OmegaWiki, Open Multilingual WordNet, Wiktionary, and Wikidata and 2) the use of statistical machine translation to acquire a very large amount of multilingual concept lexicalizations.
+      BabelNet (<a href="http://babelnet.org">http://babelnet.org</a>)is a a very large multilingual encyclopedic dictionary and ontology covering 271 languages, and created by 1) the automatic, seamless integration of WordNet with Wikipedia, OmegaWiki, Open Multilingual WordNet, Wiktionary, and Wikidata and 2) the use of statistical machine translation to acquire a very large amount of multilingual concept lexicalizations.
       </p>
     <h3>The backbone model: lemon</h3>
     <p>
-    We have chosen lemon as the backbone of BabelNet lexical knowledge RDF representation. Lemon is a model proposed for representing lexical information relative to ontologies and for linking lexicons and machine-readable dictionaries to the Semantic Web and the Linked Data cloud. However, we point out that the choice of the models and the definition of properties got refined as the conversion work went ahead.
+    We have chosen lemon as the backbone of BabelNet's lexical knowledge RDF representation. Lemon is a model proposed for representing lexical information relative to ontologies and for linking lexicons and machine-readable dictionaries to the Semantic Web and the Linked Data cloud. However, we point out that the choice of the models and the definition of properties got refined as the conversion work went ahead.
     </p>
    </section>
    
    <section>
       <h2>Selection of vocabularies</h2>
-      <p>In the following we list the reference models used during the conversion and provide i) in parenthesis the prefix adopted throughout this document; ii) the URL to the model specification.</p>  
+      <p>In the following we list the reference models used during the conversion and provide the namespace, the prefix adopted throughout this document (in bold) and the URL to the model specification.</p>  
  
       <table class="nss">
 	  <caption> <a href="#ns"> Table 1</a>: Namespaces of the vocabularies used along this document </caption>
@@ -113,7 +119,7 @@
 	  <p>In order to convert BabelNet data into RDF format we need to:</p>
 	  <ol>
 	    <li><b>Read the original data</b>: BabelNet’s data, originally stored within Lucene indexes, were accessed through BabelNet’s API and translated into RDF triples through the Jena API. The conversion module iterates over the Babel synsets and flushes converted data into data chunks (20k appeared to be a good setting).</li>
-	    <li><b>Convert the data into RDF</b>: serialisation format is n-triples (best for huge data sets), and files are printed in compressed format (gz was chosen, since bz2 is not supported by virtuoso) so that the export was compatible with virtuoso loading capacities. The resource is exported into different files according to type of license. The distribution of triples under different licenses is handled via different (Jena) models. In order to attach all BabelNet information to the NC-SA license file, pointers to Babel synsets are moved to the right file before printing.</li>
+	    <li><b>Convert the data into RDF</b>: serialisation format is n-triples (best for huge data sets), and files are printed in compressed format (gz was chosen, since bz2 is not supported by virtuoso) so that the export was compatible with virtuoso loading capacities. The resource is exported into different files according to type of license. The distribution of triples under different licenses is handled via different (Jena) models.</li>
 	    <li><b>Load data into a Virtuoso server</b>: after the RDF data has been generated, we installed and configured a Virtuoso server and finally loaded the file into the server.</li>
 	  </ol>
 
@@ -152,7 +158,7 @@ bn:plane_n_EN  a              lemon:LexicalEntry ;
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
-<p>It could be noted that instead of generating new lexical entries, it could be possible to point to existing entries in some lexical resource (such as Dbnary) which already contains all the information associated with the lexical entry, thus avoiding redundancy of information in BabelNet-lemon.</p>
+<p>We note that instead of generating new lexical entries, it could be possible to point to existing entries in some lexical resource (such as Dbnary) which already contains all the information associated with the lexical entry, thus avoiding redundancy of information in BabelNet-lemon.</p>
 
 <p>Lexical Forms (<b>lemon:Form</b>), instead, encode the surface realisation(s) of Lexical Entries (in our case: lemmas of Babel words). For instance, the English canonical form "plane" is encoded as:</p>
 
@@ -183,7 +189,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/rdf/plane_n_EN/canonica
 	</div>
 	<script>CodeMirror.fromTextArea(document.getElementById("example3"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
-      <p><b>Issues</b>: in order to reduce the amount of redundancy, we decided to merge senses of the same word - i.e., expressing the same concept - in the same language but obtained from different sources (e.g. plane from OmegaWiki and WordNet in the above example). As a result, multiple source and license information is listed for the Lexical Sense.</p>
+      <p><b>Issues</b>: in order to reduce the amount of redundancy, we decided to lump together senses of the same word - i.e., expressing the same concept - in the same language but obtained from different sources (e.g. plane from OmegaWiki and WordNet in the above example). As a result, multiple source and license information is listed for the same Lexical Sense.</p>
 
 	<h4>How to model sense translations?</h4>
 	<p><b>Item(s) to model</b>: senses which are translations of other senses within a given Babel synset.</p>
@@ -198,7 +204,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/rdf/plane_n_EN/canonica
 
       <p>LexInfo is an ontology which describes linguistic information and has been used in BabelNet-lemon to represent various linguistic information, such as translation relations and more specific relation types such as meronymy or holonymy.</p>
 
-      <p><b>Issues</b>: A first issue concerns whether including the relation <i>lexinfo:translation</i> is essential or not. Within a Babel synset any two senses (in two different languages) are always the translation of each other. For example, if you consider the Babel synset with ID bn:00000356n, the two senses dwelling (in English) and abitazione (in Italian) both belong to the synset and are each the translation of the other; this does not happen for these two senses only, but in general for all the pairs of senses with different languages in the same synset. This fact points out that this information could actually be derived as follows: whenever a system has (i) two <i>lemon:LexicalSenses</i> which (ii) belong to the same <i>skos:Concept</i> and which (iii) have a different <i>lemon:language</i>, then the system can automatically infer that the two senses are in fact one the translation of the other. This argument undermines thus the necessity of such a translation relation and highlights the possible problem of redundancy. However, having the translation relation could also be a benefit for two reasons: first, because the information is explicit in the resource and no inference would be needed at all; second, because future, subsequent releases of the lexical resource could also refine this relation and, in that case, the specification of the translation relation would be unavoidable.
+      <p><b>Issues</b>: A first issue concerns whether including the relation <i>lexinfo:translation</i> is essential or not. Within a Babel synset any two senses (in two different languages) are always the translation of each other. For example, if you consider the Babel synset with ID bn:00000356n, the two senses <i>dwelling</i> (in English) and <i>abitazione</i> (in Italian) both belong to the synset and are each the translation of the other; this does not happen for these two senses only, but in general for all the pairs of senses with different languages in the same synset. This fact points out that this information could actually be derived as follows: whenever a system has (i) two <i>lemon:LexicalSenses</i> which (ii) belong to the same <i>skos:Concept</i> and which (iii) have a different <i>lemon:language</i>, then the system can automatically infer that the two senses are in fact one the translation of the other. This argument undermines thus the necessity of such a translation relation and highlights the possible problem of redundancy. However, having the translation relation could also be a benefit for two reasons: first, because the information is explicit in the resource and no inference would be needed at all; second, because future, subsequent releases of the lexical resource could also refine this relation and, in that case, the specification of the translation relation would be unavoidable.
       </p>
 
       <p>A second issue concerns the provenance and the confidence information associated with each translation relation. BabelNet’s translations come from explicit resource information (e.g., Wikipedia interlanguage links) or from the automatic translations of semantically annotated corpora. We do have a confidence for each of these translations together with the source of the original text. This produces already a distinction regarding the quality and the origin of the translation information. So, despite the resource could potentially include it, the information about translation confidence (was it humanly or automatically produced? by whom? if automatic, with what confidence score?) and translation provenance (what text(s) does the translation come from? who translated and with what tool?) are currently missing.
@@ -207,7 +213,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/rdf/plane_n_EN/canonica
       <p>In addition, translations could be validated through human annotations over time (and thus made more authoritative) and, more in general, the resource could accommodate additional translations coming from different inputs, at different times, from different sources. The general scenario is then that of a set of provisional translations which have different characteristics about quality and provenance. At the moment the translation information is strictly bound to the Babel sense it refers to and models the probability of the sense to belong to a synset. In case of such a general scenario, a best practice is to reify the translation relation into an entity and then attach as many metadata information as needed to the reified relation. The translation entity should in fact model characteristics of the translation process rather than of the target lexical entry itself. In order to account for all such information, the International Tag Set (<a href="http://www.w3.org/TR/its20/">http://www.w3.org/TR/its20/</a>) stands out as a very good candidate. Thus, to include information about the provenance of a given annotation we could adopt the <i>its:annotatorsRef</i> attribute which "provides a way to associate all the annotations of a given data category within the element with information about the processor that generated those data category annotations" (from <a href="http://www.w3.org/TR/its20/#provenance">http://www.w3.org/TR/its20/#provenance</a>). This information should then also be paired with a confidence score (<i>its:mtConfidence</i> attribute) certifying the accuracy of the translation that the translation processor (either an automatic tool or a physical person) has provided (see <a href="http://www.w3.org/TR/its20/#mtconfidence">http://www.w3.org/TR/its20/#mtconfidence</a>).
       </p>
 
-      <p>Another possible design choice to represent explicit translations as linked data is to conider using the lemon translation module - currently under development - which "consists essentially of two OWL classes: Translation and TranslationSet. Translation is a reification of the relation between two lemon lexical senses. The idea of using a reified class instead of a property allows us to describe some attributes of the Translation object itself" (from <a href="http://www.w3.org/community/ontolex/wiki/Translation_Module">http://www.w3.org/community/ontolex/wiki/Translation_Module</a>, cf. <a href="http://lemon-model.net/lemon-cookbook/node18.html">http://lemon-model.net/lemon-cookbook/node18.html</a>).
+      <p>Another possible design choice to represent explicit translations as linked data is to consider using the lemon translation module (<a href="http://linguistic.linkeddata.es/def/translation/">http://linguistic.linkeddata.es/def/translation/</a>) which "consists essentially of two OWL classes: Translation and TranslationSet. Translation is a reification of the relation between two lemon lexical senses. The idea of using a reified class instead of a property allows us to describe some attributes of the Translation object itself" (from <a href="http://www.w3.org/community/ontolex/wiki/Translation_Module">http://www.w3.org/community/ontolex/wiki/Translation_Module</a>, cf. <a href="http://lemon-model.net/lemon-cookbook/node18.html">http://lemon-model.net/lemon-cookbook/node18.html</a>).
       </p>
 
       Future conversions of BabelNet might well include all these additional metadata information with the most suitable model entities.
@@ -215,7 +221,7 @@ bn:plane_n_EN  lemon:canonicalForm  <http://babelnet.org/rdf/plane_n_EN/canonica
 	<h4>How to encode concepts?</h4>
 	<p><b>Item(s) to model</b>: Babel synsets, i.e. sets of multilingual lexicalizations denoting a certain concept, are the core elements of BabelNet.</p>
 
-	<p><b>Our solution</b>: We used SKOS Concepts (skos:Concept) to represent ‘units of thought’ (in our case: Babel synsets). This was done thanks to its definition and because of its use to model similar objects in other RDF resources (e.g. WordNet). For example, the Babel synset which contains the first sense of plane, i.e., <a href="http://babelnet.org/rdf/s00043466n">http://babelnet.org/rdf/s00043466n</a>, is encoded as:</p>
+	<p><b>Our solution</b>: We used SKOS Concepts (skos:Concept) to represent ‘units of thought’ (in our case: Babel synsets) on the basis of its definition and its similar previous usage to model similar objects in other RDF resources (e.g. WordNet). For example, the Babel synset which contains the first sense of plane, i.e., <a href="http://babelnet.org/rdf/s00043466n">http://babelnet.org/rdf/s00043466n</a>, is encoded as:</p>
 
       <div>
       <textarea id="example5">
@@ -229,7 +235,7 @@ bn:s00001697n  a                  skos:Concept ;
 	</div>
 	<script>CodeMirror.fromTextArea(document.getElementById("example5"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
-      <p><b>Issues</b>: versioning is currently an issue, as we do not have a mechanism to keep track of previous versions of the same synset, if any, and when, i.e. from which version, the synset started to exist in BabelNet.</p>
+      <p><b>Issues</b>: versioning is currently an issue, as we do not have a mechanism to keep track of previous versions of the same synset, if any, and when (i.e. from which version) the synset started to exist in BabelNet.</p>
 	
 	<h4>How to encode concept attributes?</h4>
 	<p><b>Item(s) to model</b>: associated with a Babel synset, BabelNet has the notion of "concept type", i.e., a type label which declares the concept either as a 'Concept' (e.g., "singer") or a 'Named Entity' (e.g., "Frank Sinatra").</p>
@@ -246,7 +252,7 @@ bn:s00001697n  a                  skos:Concept ;
 
 	<h4>How to model a concept gloss?</h4>
       <p><b>Item(s) to model</b>: BabelNet provides multiple glosses in several languages for each Babel synset. A gloss is a short explanatory sentence of a concept. For example the English OmegaWiki definition for the first sense of plane in BabelNet is "A powered heavier-than-air aircraft with fixed wings that obtains lift by the Bernoulli effect and is used for transportation".</p>
-      <p><b>Our solution</b>: we defined a new entity, called <b>bn-lemon:BabelGloss</b>, which encodes a textual definition associated to a Babel synset. The property bn-lemon:definition binds synsets to their gloss(es). The fragment of text below is intended to show an example of the encoding of an English BabelGloss. Note that information such as the reference language (lemon:language) and the source of the definition (dc:source) are also attached to the gloss.</p>
+      <p><b>Our solution</b>: we defined a new entity, called <b>bn-lemon:BabelGloss</b>, which encodes a textual definition associated to a Babel synset. The property bn-lemon:definition binds synsets to their gloss(es). The fragment of text below is intended to show an example of the encoding of an English BabelGloss. Note that additional information such as the reference language (lemon:language) and the source of the definition (dc:source) are also attached to the gloss.</p>
 
       <div>
       <textarea id="example7">
@@ -279,9 +285,9 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <p><b>Issues</b>: we also note that there is another type of relation encoding the notion of 'equivalence' between concepts across different resources (such as the BabelNet synset "bn:00001697n" and the DBpedia concept <a href="http://dbpedia.org/page/Airplane">http://dbpedia.org/page/Airplane</a>). We thus decided to describe this notion of equivalence by means of the <i>skos:exactMatch</i> property; note, however, that a similar choice could have been made in favor of the <i>owl:sameAs</i> property or by relaxing the type of matching with <i>skos:closeMatch</i>, <i>rdf:seeAlso</i>, etc.</p>
 
 	<h4>How to encode resource names?</h4>
-      <p><b>Item(s) to model</b>: Resource identifiers can be encoded by using either URIs or IRIs, strings which uniquely identify resources in a model. URIs facilitate automatic elaboration of linked data, whereas IRIs improve readability for human end users. URIs can either be descriptive, that is, encoding as much meaning as possible (e.g., bn:Haus_n_DE which represents the German lexical entry for “House”), or opaque, that is providing encoding names which do not convey the content of the resource identifier (e.g., the URI for synset with ID bn:00024498n is bn:s00024498n which does not truly say much about the synset’s content). On the other hand, IRIs preserve a language’s specific alphabet but at the same time hinder readability to non-native speakers. For example the following IRI “bn:樓宇_ZH/s00044994n” encodes the sense of House in Chinese, but a non native speaker can have a hard time understanding this. An additional dimension of the naming scheme is represented by the choice whether to include the language tag in the resource identifier in the path or URI (as in the example above) or in the host name (e.g., <a href="http://zh.babelnet.org/rdf/樓宇/s00044994n">http://zh.babelnet.org/rdf/樓宇/s00044994n</a>).</p>
+      <p><b>Item(s) to model</b>: Resource identifiers can be encoded by using either URIs or IRIs, strings which uniquely identify resources in a model. URIs facilitate automatic elaboration of linked data, whereas IRIs improve readability for human end users. URIs can either be descriptive -- encoding as much meaning as possible (e.g., bn:Haus_n_DE which represents the German lexical entry for “House”) -- or opaque -- encoding names which do not convey the content of the resource identifier (e.g., the URI for synset with ID bn:00024498n is bn:s00024498n which does not truly say much about the synset’s content). On the other hand, IRIs preserve a language’s specific alphabet but at the same time hinder readability to non-native speakers. For example the following IRI “bn:樓宇_ZH/s00044994n” encodes the sense of House in Chinese, but a non native speaker can have a hard time understanding this. An additional dimension of the naming scheme is represented by the choice of whether to include the language tag in the resource identifier (as in <a href="">http://babelnet.org/rdf/樓宇_ZH/s00044994n</a>) or directly in the host name (e.g., <a href="http://zh.babelnet.org/rdf/樓宇/s00044994n">http://zh.babelnet.org/rdf/樓宇/s00044994n</a>).</p>
 
-      <p><b>Our solution</b>: use both URIs and IRIs in order to have the highest degree of flexibility and expressivity. Since our lexical resource is not divided up into different datasets, the option to provide the language identifier as part of the host name was not practical; so we decided to include it as part of the URI/IRI. For instance, the previous IRI encoded the language by means of the ‘ZH’ suffix, concatenated with the sense string 樓宇.</p>
+      <p><b>Our solution</b>: use both URIs and IRIs in order to have the highest degree of flexibility and expressivity. Since our lexical resource is not divided up into different datasets, the option to provide the language identifier as part of the host name was not practical (that is, we do not have a subdomain per language, en.babelnet.org, zh.babelnet.org, fr.babelnet.org, etc.); so we decided to include the language identifier as part of the URI/IRI. For instance, the previous IRI http://babelnet.org/rdf/樓宇_ZH/s00044994n encodes the language by means of the ‘ZH’ suffix, concatenated with the sense string 樓宇.</p>
 
       <p><b>Issues</b>: The current usage of resource identifiers is not unified yet, so that certain entities, such as Babel synsets and BabelGlosses, are encoded with URI, while other language-specific entities, such as BabelSenses and LexicalEntries, use IRI. Generally speaking, whenever it was possible to do so, we preferred meaningful URIs (e.g., bn:Haus_n_DE); in other cases we came up with IDs which uniquely identified the resource. As regards Babel synset URIs, we preferred to mantain the synset identity quite general and avoided to promote any sense as the main sense for that synset. As regards glosses, the gloss URI encodes the synsetID the gloss refers to, the language and an incremental integer which differentiates between glosses of the same language (e.g., the synset for the first sense of “home” has 3 English glosses coming from different sources, identified by bn:s00044994n_Gloss1_EN, bn:s00044994n_Gloss2_EN, and bn:s00044994n_Gloss3_EN).</p>
     </section>
@@ -311,14 +317,14 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
       <script>CodeMirror.fromTextArea(document.getElementById("example9"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
 
     <h4>License</h4>
-    <p>The dc:license entity provides information about the license information by referring to the "legal document giving official permission to do something with the resource". Values include "http://creativecommons.org/licenses/by-sa/3.0/", "http://wordnet.princeton.edu/wordnet/license/", etc.</p>
+    <p>The dc:license entity provides information about the license information by referring to the "legal document giving official permission to do something with the resource". Values include "http://creativecommons.org/licenses/by-sa/3.0/", "http://wordnet.princeton.edu/wordnet/license/", etc. In the future we might consider representing licensing information using the Open Digital Rights Language (ODRL) (<a href="http://www.w3.org/ns/odrl/2/ODRL21">http://www.w3.org/ns/odrl/2/ODRL21</a>)</p>
     
     <h4>Provenance</h4>
     <p>As stated in the Dublin Core vocabulary, the dc:source contains information about "a related resource from which the described resource is derived". In BabelNet this can take on several values, ranging among <a href="http://omegawiki.org/">"http://omegawiki.org/"</a>, <a href="http://wordnet.princeton.edu/">"http://wordnet.princeton.edu/"</a>, <a href="http://wikipedia.org/">"http://wikipedia.org/"</a>, etc.</p>
 
     <p>It is worth noting that also the PROV Ontology (PROV-O) could be adopted for describing provenance metadata, since "The goal of PROV is to enable the wide publication and interchange of provenance on the Web and other information systems". The PROV-O provides in fact "a set of classes, properties, and restrictions that can be used to represent and interchange provenance information generated in different systems and under different contexts", including versioning information, activities, agents, roles and location identifiers, among others. Thanks to the higher expressivity of PROV-O, one could think to use the model alone for encoding all the information about provenance and licensing. Even if some terms in the Dublin Core vocabulary can be mapped in a one-to-one correspondence to terms in the PROV-O (e.g., <i>dc:provenance</i> can be mapped to the PROV-O term <i>prov:has_provenance</i>, see <a href="http://www.w3.org/TR/2013/WD-prov-dc-20130312/">http://www.w3.org/TR/2013/WD-prov-dc-20130312/</a>), this is unfortunately not always the case (e.g., <i>dc:license</i> has no direct corresponding term in the PROV-O). In addition to this, BabelNet is not fully exploiting the DC’s vocabulary expressive power. There are in fact a lot of provenance-related Dublin terms - about who affected a resource (<i>dcterms:contributor</i>, <i>dcterms:publisher</i>, etc.), about when (<i>dcterms:created</i>, <i>dcterms:modified</i>, <i>dcterms:valid</i>, etc.) and how (<i>dcterms:license</i>, <i>dcterms:rights</i>, <i>dcterms:isVersionOf</i>, etc.) - which are not currently included in our encoding and which instead are worth exploring and exploiting.</p>
 
-    <p>In conclusion, if on the one hand PROV-O provides a more complete set of tools for expressing information about provenance, on the other hand it still lacks some aspect concerning licensing and this shows how, eventually, a combination of the two is probably needed.</p>
+    <p>In conclusion, if on the one hand PROV-O provides a more complete set of tools for expressing information about provenance, on the other hand it still lacks some aspect concerning licensing and, eventually, a combination of the two is probably needed.</p>
     
     <h3>Versioning</h3>
     <p>As a final remark, versioning has been left out from the conversion, for the moment. As a first step the entity <i>owl:versionInfo</i> could be used so as to provide a textual reference for the current version of the linked data. This entity is currently used only in BabelNet-lemon schema description and globally provides a version number for the whole release (for RDF, currently 3.0). In the real world, though, maybe a more sophisticated infrastructure would be needed in order to express more complex versioning description needs (for example, what should be considered to be different versions of a resource?): a long-standing and notable example of such a phenomenon is represented by WordNet, where concepts have been split, lumped, deleted or added throughout time across versions. The current available vocabularies, in fact, do not account for heavy changes in the resource and this aspect might thus be investigated in more detail in the next future by the whole community.</p>
@@ -485,7 +491,7 @@ bn:s00001697n  bn-lemon:definition  bn:s00001697n_Gloss3_EN .</textarea>
 <dd>M. Ehrmann, F. Cecconi, D. Vannella, J. McCrae, P. Cimiano, R. Navigli, <a href="http://wwwusers.di.uniroma1.it/~navigli/pubs/LREC_2014_Ehrmannetal.pdf"> <cite>Representing Multilingual Data as Linked Data: the Case of BabelNet 2.0.</cite></a>. Proc. of the 9th Language Resources and Evaluation Conference (LREC 2014), Reykjavik, Iceland, 26-31 May, 2014.</dd>
 
 <dt id="bib-SCHEMAS2">[BABELNET_SPARQL_ENDPOINT]</dt>
-<dd>BabelNet's SPARQL endpoint. URL: <a href="http://babelnet.org/sparql/">http://babelnet.org:8084/sparql/</a></dd>
+<dd>BabelNet's SPARQL endpoint. URL: <a href="http://babelnet.org/sparql/">http://babelnet.org/sparql/</a></dd>
 
 <dt id="bib-SCHEMAS3">[BABELNET_HOMEPAGE]</dt>
 <dd>BabelNet homepage. URL: <a href="http://babelnet.org/">http://babelnet.org/</a></dd>
