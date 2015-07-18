@@ -176,7 +176,7 @@ For a full specification of the TBX data model, please refer to the <a href="htt
 <h4>The lemon-ontolex model</h4>
 <p>
 <p>Lexical resources such as WordNet are one of the most important types of data sources for linguistic research. Such resources are complementary to another type of Web resources that contain a large amount of taxonomic data described in RDF such as DBpedia <span class="citation"></span>. Bridging the gap between these two types of resources means that rich linguistic information found in lexical resources (e.g., lexicons) can be used to describe information on the Web, enabling novel applications such as question answering over Linked Data <span class="citation"></span>. This leads to a new type of resources that is termed <em>ontology-lexicon</em>, which consist of an ontology describing the semantic and taxonomic nature of the domain and a lexicon describing the behaviour of the words in a language.</p>
-<p>In that context <em>lemon</em> (Lexicon Model for Ontologies) <span class="citation"></span> was proposed to provide a ``de facto&quot; standard to be used by a cloud of lexical linked data resources such as WordNet <span class="citation"></span>, BabelNet <span class="citation"></span>, and UBY <span class="citation"></span> among many others. The <em>lemon</em> model’s core consists of the following elements depicted below:</p>
+<p>In that context <em>lemon</em> (Lexicon Model for Ontologies) <span class="citation"></span> was proposed to provide a ``de facto&quot; standard to be used by a cloud of lexical linked data resources such as WordNet, BabelNet, and UBY <span class="citation"></span> among many others. The <em>lemon</em> model’s core consists of the following elements depicted below:</p>
 <p><img src="lemon-core.png" alt="image" /></p>
 <dl>
     <dt>Lexical Entry.</dt>
@@ -192,8 +192,7 @@ For a full specification of the TBX data model, please refer to the <a href="htt
     <dd><p>The reference is an entity in the ontology that the entry can be interpreted as, or alternatively that can be represented by using the lexical entry.</p>
     </dd>
 </dl>
-<p>In addition to the core, <em>lemon</em> provides a number of models to enable representation and application of the model to a wide variety of domains. Firstly the <strong>linguistic description</strong> module enables annotations to be added to entries, forms or senses. Secondly, the <strong>phrase structure</strong> module allows description of how the words within a multiword entry relate. Next, the <strong>syntax and mapping</strong> module is used to represent how a syntactic frame corresponds to one or more semantic predicates in the ontology. This is important as the subject of a verb (in language) may not correspond to the subject (domain) of a property but instead may correspond to the object (range) of the property. The <strong>variation</strong> module captures the representation of variants between terms, especially cross-lingual variants such as translation. Finally, the <strong>morphology</strong> module allows for regular expression representation of morphological variants avoiding the need to represent many forms for a single lexical entry.</p>
-<p>Additional extensions have been also developed, such as the <strong>translation</strong> module <span class="citation"></span>, which allows for representing explicit translations between lexical senses documented in different natural languages, or the <strong>lemon-BabelNet</strong> extension required for the Linked Data representation of BabelNet (see Section [sec:babelnet]).</p>
+
 
 </p>
 </section><section>
@@ -204,9 +203,9 @@ The main data elements described above have been mapped into RDF using the above
 <ul>
 	<li><b>TBX Resource</b>: is not explicitly represented, the whole dataset represents the TBX resource. A TBX resource is thus represented as a void:Dataset, to which provenance  and licensing information can be attached.
 	<li><b>Terminological Concept</b>:  is represented as a skos:Concept. The Simple Knowledge Organization System (SKOS) is a vocabulary for representing knowledge organization systems (KOS) such as thesauri, classification schemes, subject heading and taxonomies in RDF. 
-        The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>units of thought, ideas, meanings, or (categories of) objects and events, which underlie many knowledge organization system2</i>. As terminologies can be seen as a special case of a knowledge organization system, using SKOS concepts to represent terminological concepts seems appropriate.</li>
-	<li><b>Langset</b>: A langset is not represented as such in the data. Instead, one ontolex:Lexicon is created for each language for which a Langset is defined. The collection of all the terms for a given language will belong to the corresponding language-specific ontolex:Lexicon</li>
-	<li><b>TIG/NTIG</b>: are represented as ontolex:LexicalEntry, no distinction is made between terms with decomposition and terms withouth decomposition; if no decompositions information is available, this is simply omited. In that sense the representation is montonic as the decomposition information can be added later</li>
+        The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>units of thought, ideas, meanings, or (categories of) objects and events, which underlie many knowledge organization systems</i>. As terminologies can be seen as a special case of a knowledge organization system, using SKOS concepts to represent terminological concepts seems appropriate.</li>
+	<li><b>Langset</b>: A langset is not represented as such in the data. Instead, one ontolex:Lexicon is created for each language for which a Langset is defined. The collection of all the terms for a given language belongs to the corresponding language-specific ontolex:Lexicon</li>
+	<li><b>TIG/NTIG</b>: are represented as an ontolex:LexicalEntry; no distinction is made between terms with decomposition and terms withouth decomposition; if no decompositions information is available, this is simply omited. In that sense the representation is monotonic as the decomposition information can be added later</li>
 	<li><b>TermGrp</b>: the information about the morphosyntactic properties of a term is attached to the corresponding ontolex:LexicalEntry. The string enclosed in &lt;term&gt; &lt;/term&gt; is assumed to be the ontolex:canonicalForm of the lexical entry in question.</li>
 	<li><b>TermCompList</b>: the decomposition of a term is represented using the ontolex:decomp vocabulary, creating a decomp:Component and a corresponding ontolex:LexicalEntry for each component.</li>
 	<li><b>TermCompGrp</b>: the morphosyntactic properties of a component are attached to the corresponding lexical entry that is identified (through decomp:correspondsTo) with the component in question)</li>
@@ -289,7 +288,8 @@ In this section we illustrate the transformation by providing one running and re
       </div>
       <script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
 
-      The resulting RDF would looks as follows:
+The header is transformed into RDF as follows:
+
       <div>
       <textarea id="example2">
 @prefix cc:    <http://creativecommons.org/ns#> .
@@ -319,8 +319,8 @@ In this section we illustrate the transformation by providing one running and re
 
   </section><section>
 <h4>Transforming terminological concepts</h4>
-The term entry in lines 3 -7 would be represented in RDF by a <b>skos:Concept</b> in RDF. The Simple Knowledge Organization System (SKOS) is a vocabulary for representing knowledge organization systems (KOS) such as thesauri, classification schemes, subject heading and taxonomies in RDF. 
-The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>units of thought, ideas, meanings, or (categories of) objects and events, which underlie many knowledge organization systems</i>. As terminologies can be seen as a special case of a knowledge organization system, using SKOS concepts to represent terminological concepts seems appropriate.
+The term entry in lines 14 -18 would be represented in RDF by a <b>skos:Concept</b> in RDF. The Simple Knowledge Organization System (SKOS) is a vocabulary for representing knowledge organization systems (KOS) such as thesauri, classification schemes, subject heading and taxonomies in RDF. 
+The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>`units of thought, ideas, meanings, or (categories of) objects and events, which underlie many knowledge organization systems'</i>. As terminologies can be seen as a special case of a knowledge organization system, using SKOS concepts to represent terminological concepts seems appropriate.
 
 </p><p>This is shown by the following RDF snippet, where the the subject field of the terminological concept is specified via the property <i>subjectField</i>:
 </p>
@@ -336,8 +336,8 @@ The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>
 <h4>Transforming TIGs</h4>
 
 <p>Our TBX example document has two language sets for
-English and German. In the <i>lemon</i> model, a lexicon is regarded as language-specific and as comprising lexical entries for a single language. Thus, in order to represent lexical entries in different languages, one lexicon per language needs to be created. In our example, as there are terms for English and German, two lexica need to be created. These lexica contain one lexical entry each, corresponding to the terms <i>Zuständigkeit der</i>
-Mitgliedstaaten<i> and </i>competence of the Member States<i>. The English entry generated from lines 8--14 would look as follows:</i>
+English and German. In the <i>lemon</i> model, a lexicon is regarded as language-specific and as comprising lexical entries for a single language. Thus, in order to represent lexical entries in different languages, one lexicon per language needs to be created. In our example, as there are terms for English and German, two lexica need to be created. These lexica contain one lexical entry each, corresponding to the terms <i>Zuständigkeit der
+Mitgliedstaaten</i> and <i>competence of the Member States</i>. The English entry generated from lines 19--25 would look as follows:<
 </p><p><br />
 </p>
 <textarea id="example4">
@@ -360,18 +360,18 @@ Mitgliedstaaten<i> and </i>competence of the Member States<i>. The English entry
   ontolex:reference &#160;:IATE_84.
 </textarea>
       <script>CodeMirror.fromTextArea(document.getElementById("example4"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
-<p>Note that the entry specifies the reliability code (i.e. 3), the type of term (i.e. <i>full form</i>), the canonical form (i.e. c<i>ompetence of the member states</i>), and the language (i.e. \emph{en}). Each lexical entry is assumed to have a <b>LexicalSense</b> that represents the meaning of the entry. In this case the meaning is established by <b>reference</b> to the terminological concept&#160;:IATE_84.
+<p>Note that the entry specifies the reliability code (i.e. 3), the type of term (i.e. <i>full form</i>), the canonical form (i.e. c<i>ompetence of the member states</i>), and the language (i.e. <i>en</i>. Each lexical entry is assumed to have a <b>LexicalSense</b> that represents the meaning of the entry. In this case the meaning is established by <b>reference</b> to the terminological concept&#160;:IATE_84.
 </p><p>We would generate a similar entry for German, which is identified as 
 <i>:Zust\%C3\%A4ndigkeit+\-der\-+Mitgliedstaaten-de</i> and is an entry in the corresponding German lexicon. Note that both entries have a <i>reference</i> to  <i>:IATE_84</i> and are thus cross-lingual equivalents.
 </p>
 </section><section>
 <h4>Transforming NTIGS</h4>
-<p>Components of a composite term are represented as <i>constituents</i> of the composite term. A component is linked to its corresponding lexical entry by way of the {\tt correspondsTo} relation. In the example below, the
+<p>Components of a composite term are represented as <i>constituents</i> of the composite term. A component is linked to its corresponding lexical entry by way of the <b>correspondsTo</b> relation. In the example below, the
 lexical entry <i>Zust%C3%A4ndigkeit+der+Mitgliedstaaten-de</i> is linked to an
 object  <i>Zust%C3%A4ndigkeit+der+Mitgliedstaaten-de#ComponentList</i> representing its decomposition via the
 property <b>correspondsTo</b>. This object
 <i>Zust\%C3\%A4ndigkeit+der+Mitgliedstaaten-de#ComponentList</i> is
-linked to its components via the property <b>constituent</b>. For each component, its part-of-speech and grammatical number (if applicable) is indicated. The decomposition of the German entry for <i>Zust\"andigkeit der Mitgliedstaaten</i> (lines 21-36 in the sample TBX document) is represented in RDF as indicated below:
+linked to its components via the property <b>constituent</b>. For each component, its part-of-speech and grammatical number (if applicable) is indicated. The decomposition of the German entry for <i>Zuständigkeit der Mitgliedstaaten</i> (lines 32-47 in the sample TBX document) is represented in RDF as indicated below:
 </p>
 <textarea id="example5">
 &lt;http://tbx2rdf.lider-project.eu/data/iate/de&gt;  a	ontolex:Lexicon&#160;;
@@ -414,14 +414,13 @@ linked to its components via the property <b>constituent</b>. For each component
   rdfs:label        &quot;Mitgliedstaat&quot;@en&#160;;
   tbx:partOfSpeech  tbx:singular&#160;;
   tbx:grammaticalNumber tbx:plural
-\end{lstlisting}
 </textarea>
       <script>CodeMirror.fromTextArea(document.getElementById("example5"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
   </section><section>
-<h4>Transforming Transaction Information</h4>
+<h4>Representing Transaction Information</h4>
 
 <p>Finally, we discuss how to represent provenance information, in particular provenance information as expressed via transaction elements in TBX. 
-We rely on the [<a rel="nofollow" class="external free" href="http://www.w3.org/TR/prov-o/">http://www.w3.org/TR/prov-o/</a> PROV-O ontology} for this, as this is the W3C recommended vocabulary to <i>`represent and interchange provenance information generated in different systems and under different contexts´</i>. Some provenance information is given on lines 37--42 of our TBX example document and
+We rely on the PROV-O ontology for this, as this is the W3C recommended vocabulary to <i>`represent and interchange provenance information generated in different systems and under different contexts´</i>. Some provenance information is given on lines 48--53 of our TBX example document and
 from this we generate the following representation:
 </p>
 <textarea id="example6">
