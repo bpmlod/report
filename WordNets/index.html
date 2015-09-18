@@ -37,7 +37,7 @@
   <body>
     <section id='abstract'>
       <p> 
-    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular WordNets. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
+    This document is aimed to guide in the process of creating a Linked Data (LD) version of a wordnet, and may be of interest for other kinds of resources. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
     This document describes the models used and the design decisions taken during the conversion of WordNet into the well-known lemon representation. More in general, we will describe common patterns that naturally emerge when converting a lexical resource into RDF format.    
       </p>
     </section>
@@ -103,20 +103,39 @@
 	<div><img alt="An example of the modelling a single word and synset and links to other resources." src="Wn-rdf-example.png"><br>An example of the modelling a single word and synset and links to other resources</div>
 
 	<p>
-	It is not trivial to apply lemon to the case of a WordNet as there is no clear ontology in WordNet. Clearly, WordNet’s words can be regarded as lemon lexical entries and the word senses correspond well to lemon’s lexical senses. WordNet has lemmas and a separate list of variants of these, and as such we create a canonical form for each lemma and a Form object for each of these variants. Since there is currently no indication in WordNet of what grammatical properties these variants have, we do not attach additional properties to these variants/forms. As lemon is a model for ontology-lexica, the main question is what the reference of the lexical senses should be. We choose to regard WordNet’s synsets as ontological references, but instead of assigning them a formal ontological type (e.g., class, property or individual), we introduce a new type Synset as a subclass of Concept in SKOS.
+        It is not trivial to apply <i>lemon</i> to the case of a WordNet as 
+        there is no clear ontology in WordNet. Clearly, WordNet’s words can 
+        be regarded as lemon lexical entries and the word senses correspond 
+        well to lemon’s lexical senses. WordNet has lemmas and a separate 
+        list of variants of these, and as such we recommend creating a canonical form for 
+        each lemma and a form object for each of these variants. Since there is 
+        currently no indication in WordNet of what grammatical properties these 
+        variants have, we do not recommend attaching additional properties to these 
+        variants/forms. As lemon is a model for ontology-lexica, the main 
+        question is what the reference of the lexical senses should be. We 
+        recommend regarding WordNet’s synsets as ontological references, but 
+        instead of assigning them a formal ontological type (e.g., class, 
+        property or individual), we introduce a new type <tt>Synset</tt> 
+        as a subclass of <tt>Concept</tt> in SKOS.
 	</p><p>
-	This allows us to capture the nature of synsets without ontologizing the semantic network. Similarly, we introduce relations such as hypernymy, meronymy etc. as new properties rather than attempt to relate them to existing ontological properties such as OWL’s subClassOf. In order to capture the new properties, we introduce an ontology http://wordnet-rdf.princeton.edu/ontology
-	</p>
-	<p>
-	XXX describing the new properties and classes and provide axioms for the use in the context of both lemon and SKOS.
-	</p>
-	<p>
-	These axioms including stating transitivity constraints and equivalence to other vocabularies, e.g., WordNet’s hypernym to SKOS’s broader. Furthermore, we link the elements in the ontology to data categories from ISOcat.
+        This allows the nature of synsets to be captured without ontologizing 
+        the semantic network. Similarly, we introduce relations such as 
+        hypernymy, meronymy etc. as new properties rather than attempt to 
+        relate them to existing ontological properties such as OWL’s 
+        <tt>subClassOf</tt>. In order to capture the new properties, 
+        an ontology has been created at <a href="http://wordnet-rdf.princeton.edu/ontology">http://wordnet-rdf.princeton.edu/ontology</a>
 	</p>
 
 	<h3>URI design</h3>
 	<p>
-	Another key question concerns the identifiers we use for each element in the data. We do not assign new identifiers but instead we attempt to use the existing identifiers in WordNet. Furthermore, as WordNet has released several versions and is still under development, we consider it important to include the version number in the URI. As such, we use the following scheme for URIs, as exemplified below:
+	Another key question concerns the identifiers to use for each element in the data. 
+        In order to enable browsability, we recommend that each entry and each synset
+        has its own page and thus it own URI. We do not recommend distributing
+        WordNets as a single flat file as they are large and this impedes their
+        access on the web. You should assign new identifiers using the existing identifiers in your wordnet.
+        Furthermore, as wordnets have released several versions and are still under development, 
+        we consider it important to include the version number in the URI. 
+        As such, we recommend the following scheme for URIs, as exemplified below:
 	
 	<ul>
 	  <li>Each lexical entry is represented by means of the URL-encoded lemma and then a dash followed by the part-of-speech as a single letter (i.e., ‘n(oun)’, ‘v(erb)’, ‘a(djective)’, ‘r (adverb)’, ‘adjective s(atellite)’ or ‘p(article)’).</li>
@@ -132,29 +151,97 @@ http://wordnet-rdf.princeton.edu/wn31/cat-n#CanonicalForm
 http://wordnet-rdf.princeton.edu/wn31/cat-n#2-n
 http://wordnet-rdf.princeton.edu/wn31/300001740-a</textarea>
 </div>
-<script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script>
+<script>CodeMirror.fromTextArea(document.getElementById("example1"), {mode: "text/turtle", lineNumbers: false, readOnly:true});</script>
 	</p>
 
-	<h3>Linking</h3>
-	<p>
-	In addition to providing a RDF/Linked Data version of WordNet, we have incorporated a number of links to other resources. In particular we include the following elements:
-	
-	<ul>
-	  <li>For verbs, we include mappings to VerbNet  if they exist. As VerbNet does not currently have a linked data version, we link to the PHP page of the web site.</li>
-	  <li>We include translations from Open Multilingual WordNet  as simple labels on the synsets, identified by the use of language codes.</li>
-	  <li>We have included previous mappings to LexVo  using the current identifiers in WordNet.</li>
-	  <li>We include links to the W3C WordNet 2.0 export.</li>
-	  <li>We have created new links to lemonUby.</li>
-	</ul>
+        <h3>WordNet JSON</h3>
+        <p>
+        In combination with the <a href="http://globalwordnet.org">Global WordNet
+            Association</a>, we have developed a set of guidelines for creating 
+        wordnets as linked data. This can be done in either the <a 
+            href="http://www.lexicalmarkupframework.org">LMF</a>-compliant
+        WN-LMF format or using the JSON-LD enabled schema below. The JSON-LD 
+        schema consists of the following elements
 
-	In addition to these links, we provide support for legacy resources by adding URL mappings from previous versions of WordNet identifiers to the most recent version. We intend to continue to expand this linksets with contributions from the community.
-	</p>
+        <ul>
+            <li><b>Lexicon</b> the root of a document should be a lexicon or a 
+            lexical entry that consists of a number of Lexical Entries</li>
+            <li><b>A Lexical Entry</b> is a single word or multiword expression
+            as defined by <a href="http://lemon-model.net/">lemon</a></li>
+            <li>Each lexical entry must have exactly one <b>Lemma</b> it may
+            have any number of other forms. Each of these must have a 
+            single <b>Written Representation</b></li>
+            <li>It may have other properties such as part-of-speech, see
+            documentation at <a href="http://globalword.github.io/schemas/JSON-LD.md">
+                http://globalword.github.io/schemas/JSON-LD.md</a></li>
+            <li>Any number of <b>senses</b> each of which should link to
+            <b>synsets</b> and give a gloss plus any lexical relationships such
+            as <b>hypernym</b>
+        </ul>
 
-	<h3>Publication</h3>
-	<p>
-	The data is made available through the <a href="http://github.com/jmccrae/yuzu">Yuzu</a> framework, which allows for custom HTML wrapper to be put over a generic linked data site. In this case, this allows the data to be accessible using content negotiation as either HTML with RDFa annotations, RDF/XML, Turtle, N-Triples or JSON-LD formats. In addition, the data is also available as a single zipped N-Triples file. The main database is served from a SQLite database, but the Yuzu framework supports SPARQL querying either over this database or over an external endpoint (the second option is currently in use).
-    </p>
-    
+        An example of an entry given in JSON-LD is as follows, please refer 
+        to the <a href="http://globalword.github.io/schemas/JSON-LD.md">Global WordNet
+            documentation</a> for more details. 
+
+        <div><textarea id="wnjson">{
+  "@context": [ "http://globalwordnet.github.io/schemas/wn-json-context.json", 
+                { "@language": "en" } ],
+  "@id": "pwn30",
+  "label": "Princeton WordNet",
+  "language": "en",
+  "publisher": "Princeton University",
+  "rights": "wordnetlicense:",
+  "entry": [{
+    "@id" : "w1",
+    "lemma": { "writtenForm": "wordnet" }, 
+    "partOfSpeech": "wn:noun",
+    "sense": [{
+      "@id": "106652077-n-1",
+      "synset": {
+        "@id": "106652077-n",
+        "ili": "s35545",
+        "definition": {
+          "gloss": "any of the..." ,
+          "iliDef": "any of the..."
+         },
+         "hypernym": ["106651393-n"]
+      }
+    }]
+  }]
+}</textarea><div>
+<script>CodeMirror.fromTextArea(document.getElementById("wnjson"), {mode: "text/javascript", lineNumbers: false, readOnly:true});</script>
+</section>
+<section>
+    <h2>Linking to the Interlingual Index</h2>
+
+    Once a wordnet has been created, its synsets should be linked into the 
+    <b>Collaborative Interlingual Index</b> which is maintained at 
+    <a href="http://globalwordnet.org/ili/">http://globalwordnet.org/ili/</a>.
+    For up-to-date information about creating wordnets you should refer to the
+    Global WordNet Association site.  
+    You may link to the ILI by choosing the appropriate links from the RDF graph
+    as linking using the usual mechanism and as many resources will be linked 
+    to the ILI this guarantees the connectivity of your resource. You may also
+    ask that your wordnet is indexed as part of the ILI, this request requires 
+    that:
+
+    <ol>
+        <li>Your resource has an license that allows redistribution with only
+        attribution. Non-commercial and Share-A-Like license are not accepted.</li>
+        <li>The resource is in WordNet LMF or WordNet JSON</li>
+        <li>Every synset in your wordnet has a definition <i>in English</i></li>
+        <li>Every synset is either linked to the ILI as either a synonym, hypernym,
+        antonym or meronym</li>
+        <li>You do not create any duplicates of concepts already in the ILI (this
+        is checked by automatic methods)</li>
+        <li>Definitions are written according to the quality guidelines on the
+        Global WordNet Assocation webpage</li>
+    </ol>
+
+    Details of how to submit your wordnet can be found at the Global WordNet 
+    Association homepage.
+
+</section>
    
 <script>
  setTimeout(function(){CodeMirror.colorize();}, 20);
