@@ -170,7 +170,7 @@ The TBX Data Model as an UML diagram.
 </ul>
 
 
-For a full specification of the TBX data model, please refer to the <a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">TBX DTD</a>.
+For a full specification of the TBX data model, please refer to <cite><a href="#bib-tbx">TBX DTD</a></cite>  <!--<a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">TBX DTD</a>-->.
 </p>
 </section><section>
 <h4>The lemon-ontolex model</h4>
@@ -337,7 +337,7 @@ The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>
 
 <p>Our TBX example document has two language sets for
 English and German. In the <i>lemon</i> model, a lexicon is regarded as language-specific and as comprising lexical entries for a single language. Thus, in order to represent lexical entries in different languages, one lexicon per language needs to be created. In our example, as there are terms for English and German, two lexica need to be created. These lexica contain one lexical entry each, corresponding to the terms <i>Zuständigkeit der
-Mitgliedstaaten</i> and <i>competence of the Member States</i>. The English entry generated from lines 19--25 would look as follows:<
+Mitgliedstaaten</i> and <i>competence of the Member States</i>. The English entry generated from lines 19--25 would look as follows:
 </p><p><br />
 </p>
 <textarea id="example4">
@@ -516,7 +516,7 @@ select distinct ?c ?cf from <http://tbx2rdf.lider-project.eu/> where {
 <section>
 <h2>Implementation</h2>
 <p>
-A converter has been implemented to map TBX/XML input into RDF using the vocabularies described above. The converter has been implemented as a Java program that reads in the document and builds the DOM tree. The DOM tree is traversed and elements are mapped to appropriate object-oriented datastructures. These datastructures are then serialized as RDF. The code is available as GitHub project <a href="https://github.com/cimiano/tbx2rdf">tbx2rdf</a>.
+A converter has been implemented to map TBX/XML input into RDF using the vocabularies described above. The converter has been implemented as a Java program that reads in the document and builds the DOM tree. The DOM tree is traversed and elements are mapped to appropriate object-oriented datastructures. These datastructures are then serialized as RDF. The code is available as GitHub project <cite><a href="#bib-tbx2rdf">tbx2rdf</a></cite> <!--<a href="https://github.com/cimiano/tbx2rdf">tbx2rdf</a>.-->
 </p>
 <p>
 As additional input to the program, a file can be provided that contains mappings of specific XML elements and attributes used in the TBX document to URIs representing properties. If no file is specified the default file "default.mappings" is used. This option is only available when directly executing the Java program, not via the Web service.
@@ -526,10 +526,18 @@ A service for converting TBX to RDF is available <a href="http://tbx2rdf.lider-p
 </p>
 </section>
 <section><h2>References</h2>
-<p>
+<!--<p>
 <a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">TBX Standard as published by LISA</a><br/>
 <a href="https://github.com/cimiano/tbx2rdf">tbx2rdf GitHub Project</a><br/>
-   </p>
+   </p>-->
+<dt id="bib-tbx">[TBX DTD]</dt>
+<dd> TBX Standard as published by LISA  URL: <a href="http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf">http://www.ttt.org/oscarstandards/tbx/tbx_oscar.pdf</a>
+
+<dt id="bib-tbx2rdf">[tbx2rdf]</dt>
+<dd> tbx2rdf GitHub Project  URL: <a href="https://github.com/cimiano/tbx2rdf">https://github.com/cimiano/tbx2rdf</a>
+
+    
+    
    </section>
 <script>
  setTimeout(function(){CodeMirror.colorize();}, 20);
