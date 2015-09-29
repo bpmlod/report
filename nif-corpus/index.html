@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Guidelines for Linked Data corpus creation using NIF</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "bidict-bpmlod",
+		  publishDate:  "2015-09-29",
+          editors: [
+                {   name:       "Martin Brümmer",
+                    url:        "http://aksw.org/MartinBruemmer.html",
+                    company:    "Institut für angewandte Informatik e.V.",
+                    companyURL: "http://infai.org" }
+          ],
+		  authors: [
+                {   name:       "Martin Brümmer",
+                    url:        "http://aksw.org/MartinBruemmer.html",
+                    company:    "Institut für angewandte Informatik e.V.",
+                    companyURL: "http://infai.org" },
+				{   name:       "Markus Ackermann",
+                    url:        "http://aksw.org/MarkusAckermann.html",
+                    company:    "Institut für angewandte Informatik e.V.",
+                    companyURL: "http://infai.org" },
+				{   name:       "Milan Dojchinovski",
+                    url:        "http://aksw.org/MilanDojchinovski.html",
+                    company:    "Institut für angewandte Informatik e.V.",
+                    companyURL: "http://infai.org" }
+					
+          ],
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.w3.org/community/bpmlod/",
+          wgPublicList: "http://lists.w3.org/Archives/Public/public-bpmlod/",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+       This document describes best practices to follow for the generation of Linked Data text corpora, using the NLP Interchange Format (NIF). NIF is an RDF/OWL-based format that aims to achieve interoperability between NLP tools, language resources and annotations. It can be used to assign URIs to strings and annotate the resulting resources. The <a href="http://brown.nlp2rdf.org">Brown corpus</a> serves as example throughout these guidelines.
+      </p>
+    </section>
+
+    <section id='sotd'>
+  <!--    <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+  -->    <p>There are a number of ways that one may participate in the development of this report:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
+	     for this document can be found on Github.</li>
+      </ul>
+    </section>
+    
+   <section>
+      <h2>Introduction</h2>
+      <p>NIF is an RDF-based format for describing strings in text documents. The format - its classes and properties are formally defined within the <a href="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core.html">NIF Core Ontology</a>. The core classes of NIF important to this tutorial are: 
+	  </p><p><ul>
+        <li>String: A string contained in the document or the document's content itself, described by beginIndex and endIndex.</li>
+        <li>Context: A string that serves as context for its substrings. It usually describes the whole document's text and contains it in the nif:isString property.</li>
+        <li>Sentence: A String which represents a sentence.</li>
+        <li>Phrase: A String which represents a phrase.</li>
+        <li>Word: A String which represents a single word.</li>
+      </ul></p>
+      <p>Looking at <a href="http://brown.nlp2rdf.org/corpus/">a mirror of the Brown corpus</a>, we can see there are 500 XML documents. Every document contains some metadata as well as a number of sentences with annotated words, including their part-of-speech tags. Consider this example, which is the first sentence of the first document (<a href="http://brown.nlp2rdf.org/corpus/a01.xml">http://brown.nlp2rdf.org/corpus/a01.xml</a>) of the corpus:</p>
+      <pre class="example" title="Brown corpus example sentence">The Fulton County Grand Jury said Friday an investigation of Atlanta's recent primary election produced ``no evidence'' that any irregularities took place.</pre>
+   </section> 
+  
+	<section>
+      <h2>Selection of vocabularies</h2>
+      <p>In the following we list the reference models used during the conversion and provide the namespace, the prefix adopted throughout this document (in bold) and the URL to the model specification.</p>
+      
+  
+    <table class="nss">
+<caption> <a href="#ns"> Table 1</a>: Namespaces of the relevant vocabularies </caption>
+<tbody>
+<tr><td><b>owl</b></td><td>&lt;http://www.w3.org/2002/07/owl#&gt;</td></tr>
+<tr><td><b>rdfs</b></td><td>&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</td></tr>
+<tr><td><b>nif</b></td><td>&lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#&gt;</td></tr>
+<tr><td><b>itsrdf</b></td><td>&lt;http://www.w3.org/2005/11/its/rdf#&gt;</td></tr>
+<tr><td><b>olia</b></td><td>&lt;http://purl.org/olia/olia.owl#&gt;</td></tr>
+<tr><td><b>nerd</b></td><td>&lt;http://nerd.eurecom.fr/ontology#&gt;</td></tr>
+<tr><td><b>prov</b></td><td>&lt;http://www.w3.org/ns/prov#&gt;</td></tr>
+</tbody>
+</table>
+ 
+   </section> 
+ 
+    <section>
+      <h2>String identification</h2>
+      <p>NIF was developed to allow NLP tools to exchange text annotations in RDF. This requires a way to make text strings referenceable by URIs to be able to use them as resources of RDF statements. The algorithm to create a URI for a specific string contained in a document is called a URI scheme. This scheme needs a number of parameters to create a URI, namely:</p>
+      <ul>
+       <li>the <u>URI of the document</u> itself, in the following addressed as prefix</li>
+       <li>the <u>character indices</u> of beginning and end of the string to address</li>
+       <li>a <u>separator</u> between the prefix and string position identifier</li>
+      </ul>
+      <p>Character indices in NIF are counted offset based, starting at zero before the first character and counting the gaps between the characters incrementally until after the last character of the referenced string.</p>
+      
+       <figure id="fig1">
+			<center>
+			<img style="width: 25%" src="./img/offset.png" alt="Visualisation of offset based character counting">
+			<figcaption><span class="fig-title">Visualisation of offset based character counting</span></figcaption>
+			</center>
+      </figure>
+      <p>The canonical URI scheme of NIF, <b>nif:OffsetBasedString</b>, is based on these character indices. Hence, the following URI can address the substring "Fulton" in our example sentence of the document <a href="http://brown.nlp2rdf.org/corpus/a01.xml">http://brown.nlp2rdf.org/corpus/a01.xml</a>:</p>
+	  <pre class="example" title="NIF URI syntax example"><span style="color:#8A0808">http://brown.nlp2rdf.org/lod/a01.ttl#</span><span style="color:blue">offset_</span><span style="color:#088A08">4_10</span></pre>
+
+      <p>The <span style="color:#8A0808">prefix</span> of this URI is colored <span style="color:#8A0808">red</span>, marking the URI of the corpus document that contains our example sentence, is recommended to end on slash ('/'), hash (‘#’) or on a query component ('?'). The <span style="color:blue">scheme identifier</span> is marked <span style="color:blue">blue</span> and states that a range of characters is identified. The <span style="color:#088A08">fragment identifier</span>, colored <span style="color:#088A08">green</span>, describes the start and end offset of the identified string. The combination of scheme identifier and fragment identifier (in our case ‘offset_4_10’) is also called <b>identifier part</b>. The URI scheme, as it is defined, helps to i) uniquely identify Strings and ii) compute (if needed) begin and end offsets out of the string URI.</p>
+ 	
+    </section>
+    <section>
+      <h2>String annotation</h2> 
+      <p>After assigning URIs to meaningful strings of the corpus, these URIs can be annotated using the NIF core ontology. The central class is nif:String, the class of all words consisting of Unicode characters.
+Strings offer properties to describe their content (the Unicode character string itself, via nif:anchorOf) and their position according to other strings with text indices (via nif:beginIndex and nif:endIndex, <b>mandatory</b>) as well as various semantic information, like part-of-speech tags, sentiment values or word stems.
+</p>
+    <section>
+      <h3>Context</h3>
+      <p>nif:Context is a subclass of the nif:String class. The Context represents the whole document. It serves as a reference point to all other substrings. It <b>must</b> have either a <b>nif:isString</b> property which contains the string content of the document or a <b>nif:contextStringRef</b> property pointing to a URL where the same string content can be obtained. In both cases, the string content <b>must</b> be cleaned from any markup and encoded as Unicode. Furthermore these unicode strings should be in Unicode Normal Form C (NFC), barring compelling reasons to use Normal Form D.  In our case it looks like this when embedding the primary text data:
+</p>
+    <pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt;
+        a nif:String , nif:Context , nif:OffsetBasedString ;
+        nif:isString """The Fulton County Grand Jury said Friday an investigation of Atlanta's recent primary election produced ``no evidence'' that any irregularities took place. [...]"""^^xsd:string ;
+        nif:beginIndex "0"^^xsd:int ;
+        nif:endIndex "161"^^xsd:int ;
+        nif:sourceUrl &lt;http://icame.uib.no/brown/bcm.html&gt; .
+	</pre>
+    <p>Here the equivalent context representation using a stand-off annotation approach:</p>
+    <pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt;
+        a nif:String , nif:Context , nif:OffsetBasedString ;
+        nif:contextStringRef &lt;http://brown.nlp2rdf.org/corpus/a01.text&gt; ; 
+        nif:beginIndex "0"^^xsd:int ;
+        nif:endIndex "161"^^xsd:int ;
+        nif:sourceUrl &lt;http://icame.uib.no/brown/bcm.html&gt; .
+	</pre>
+    <p>nif:beginIndex of the Context is always 0, because it represents the whole document. The nif:endIndex simply is the length of the string.</p>
+    </section>
+    <section>
+      <h3>Sentences, Words and other strings</h3>
+      <p>Substrings of the <b>nif:Context</b> can be anything from a single word to sentences and paragraphs. They link to the relevant Context resource via <b>nif:referenceContext</b>. Beginning and end indices always refer to the string content represented by the context.
+<br/>The first <b>sentence</b> of our document would be presented as follows:</p>
+    <pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_155&gt;
+        a nif:String , nif:Sentence , nif:OffsetBasedString ;
+        nif:anchorOf """The Fulton County Grand Jury said Friday an investigation of Atlanta's recent primary election produced ``no evidence'' that any irregularities took place."""^^xsd:string ;
+        nif:referenceContext &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt; ;
+        nif:beginIndex "0"^^xsd:int ;
+        nif:endIndex "155"^^xsd:int .
+	</pre>
+    <p>Note that the property <b>nif:anchorOf may</b> be used to explicate the annotated string. <b>Words</b> are annotated the same way. The first word of the document is annotated as follows:</p>
+	<pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_3&gt;
+        a nif:String , nif:Word , nif:OffsetBasedString ;
+        nif:anchorOf "The"^^xsd:string ;
+        nif:referenceContext &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt ;
+        nif:oliaLink brown:AT ;
+        nif:nextWord &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_4_10&gt ;
+        nif:sentence &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_155&gt ;
+        nif:beginIndex "0"^^xsd:int ;
+        nif:endIndex "3"^^xsd:int .
+	</pre>
+    <p>Words <b>may</b> link the following word as well as their sentence. Further annotations can be added to words. Note the <b>nif:oliaLink</b> property, that assigns a part-of-speech (POS) tag to the word.</p>
+    </section>
+    <section>
+      <h3>Annotations - general concepts</h3>
+    <p>NIF 2.1 distinguishes between two general kinds of annotations:</p>
+    <ul>
+     <li>text span annotations (<b>nif:TextSpanAnnotation</b>) highlight portions of text to carry an intrinsic characteristic that does not need to be specified further using property assertions (e.g. marking a word or phrase as a mentioning of a named entity, marking a phrase as direct quotation)</li>
+     <li>property annotation assertions (<b>nif:PropertyAssertionAnnotation</b>) associate a portion of a text with fact assertions (e.g. providing a part-of-speech annotation for a word or linking an occurrence of a named entity in the text to an information resource representing the entity, for instance a DBpedia resource)</li>
+    </ul>
+    <p>Also, it is often important to provide provenance and confidence information for represented annotations, especially when they were generated (semi-)automatically by NLP-tools. A generic property <b>nif:confidence</b> is provided to express confidence values. To express provenance, appropriate elements of the <a href="http://www.w3.org/TR/prov-o/">PROV ontology</a> should be used, particularly <b>prov:wasGeneratedBy</b> and <b>prov:wasAttributedTo</b>. When several annotation are to be expressed for the same NIF string instance, additional resources typed nif:AnnotationUnit might need to be introduced to associate provenance and confidence information unambiguously. The following paragraph on named entity annotation gives opportunity to elucidate these concepts.</p>
+    </section>
+    <section>
+      <h3>Named Entities</h3>
+    <p>Depending on how much information is available, named entities have to be annotated in different ways. If some annotator or tool was just able to spot the occurrence of a named entity without identifying it conclusively, <b>nif:EntityMention</b> is called for (which is a plain text span annotation).</p>
+    <pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_4_10&gt;
+        a nif:String , nif:Word , nif:OffsetBasedString ;
+        nif:anchorOf "Fulton"^^xsd:string ;
+        nif:referenceContext &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt; ;
+        nif:beginIndex "4"^^xsd:int ;
+        nif:endIndex "10"^^xsd:int ;
+        a nif:EntityMention ;
+        nif:confidence “0.98”^^xsd:decimal .
+	</pre>
+    <p>In most cases, you will have the <b>coarse-grained class</b> the entity belongs to (i.e. if it is a Person, a Location, an Organization etc). To annotate these, please refer to the NERD ontology. Like in the case of OLiA, it maps different named entity types to single resources, increasing interoperability. The relevant property for annotation is <b>nif:taNerdCoreClassRef.</b></p>
+    <p>On the other hand, if you have a direct link to, for example, the respective DBpedia resource, you should of course link this one, too. For this purpose you can use the <b>itsrdf:taIdentRef</b> property from the <a href="http://www.w3.org/TR/its20/">Internationalization Tag Set</a> (ITS) Version 2.0 vocabulary which enables integration of automated processing of human language into core Web technologies. ITS 2.0 provides properties, also called data categories, which can be used to express information related to machine translation, terminology, text analysis, provenance, confidence, etc. All ITS 2.0 properties are compatible and can be used in combination with NIF.</p>
+    <p>Although there are no named entity annotations in the Brown corpus itself, we will add some for in the following example, since three separate pieces of annotation information is added to the same NIF string, <b>nif:AnnotationUnits</b> to clearly associate provenance information:</p>
+    <pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_4_10&gt;
+        a nif:String , nif:Word , nif:OffsetBasedString ;
+    nif:anchorOf "Fulton"^^xsd:string ;
+    nif:referenceContext &lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_161&gt; ;
+    nif:oliaLink brown:NP ;
+    nif:beginIndex "4"^^offset ;
+    nif:endIndex "10"^^xsd:int ;
+    nif:annotationUnit [
+        a nif:EntityMention ;
+        nif:confidence “0.98”^^xsd:decimal
+        prov:wasAttributedTo &lt;http://aksw.org/MarkusAckermann.rdf&gt;
+    ] ;
+    nif:annotationUnit [
+        nif:taNerdCoreClassRef nerd:Location ;
+        nif:confidence “0.85”^^xsd:decimal ;
+        prov:wasAttributedTo &lt;http://aksw.org/MartinBruemmer.rdf&gt;
+    ] ;
+    nif:annotationUnit [
+        itsrdf:taIdentRef &lt;http://dbpedia.org/page/Fulton_County,_Georgia&gt; ;
+        nif:confidence “0.72”^^xsd:decimal ;
+    prov:wasAttributedTo &lt;http://aksw.org/MartinBruemmer.rdf&gt;
+    ] .
+
+	</pre>
+    </section>
+    <section>
+      <h3>POS Annotations</h3>
+    <p>Part-of-speech annotations are handled in NIF via <a href="http://purl.org/olia">OLiA</a>. In general, OLiA is a set of ontologies that map corpus or tool specific annotations to a reference model. While NIF aims to provide syntactic interoperability between NLP tools and relevant corpora, OLiA provides a component of semantic interoperability by mapping the disparate annotation terms used by different tools and corpora to entities of a common reference model.
+Differences in annotation terminology range from minor differences in the choice of tag names to more fundamental variations. For each of these different annotation schemes, OLiA provides an Annotation Model, as well as a Linking Model to the common Reference Model. The reference model contains basic POS classes the abstract from specific POS as used in single tagsets.
+</p><p>To transform POS annotations into OLiA, visit the <a href="http://purl.org/olia">OLiA page</a> and search for the annotation model that matches your tagset. In our case, it is the <a href="http://acoli.cs.uni-frankfurt.de/resources/olia/brown.owl">Brown annotation model</a>. Now POS tags found in the corpus can just be appended to the annotation model’s URI:
+</p>
+<pre class="example">
+&lt;http://brown.nlp2rdf.org/corpus/a01.xml#offset_0_3&gt;
+        nif:oliaLink &lt;http://purl.org/olia/brown.owl#AT&gt;
+	</pre>
+<p>In practice, aggregations of different corpora and tool outputs can then be queried for links to the OLiA reference model. This allows, for example, to aggregate the output of an NLP tool that using two different tagset and query it for all words of the type ``adjective''.
+</p>
+</body>
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</html>
