@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NIF-based NLP Web Services</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "nifnlp-bpmlod",
+          publishDate:  "2015-09-29",
+          editors: [
+                {   name:       "Philipp Cimiano",
+                    url:        "http://www.cimiano.de",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+                {   name:       "Sebastian Walter",
+                    url:        "http://sebastianwalter.org",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+                {   name:       "Matthias Hartung",
+                    url:        "http://www.cit-ec.de/",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+          ],
+		  previousMaturity: "FPWD",
+	      previousPublishDate:  "2014-22-07",
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.w3.org/community/bpmlod/",
+          wgPublicList: "public-bpmlod",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+      This document describes best practices to follow for the implementation of RESTful NLP web services that rely on the NLP Interchange Format (NIF).
+      „NIF is an RDF/OWL-based format that aims to achieve interoperability between NLP tools language resources and annotations.“
+      As a proof-of-concept, we have implemented NIF wrappers for the <cite><a href="#bib-stanfordtagger">Stanford POS tagger</a></cite> and <cite><a href="#bib-stanfordparser">Stanford parser</a></cite>. Both are  licensed under Creative Commons Attribution 4.0 International.
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+      <p>There are a number of ways that one may participate in the development of this report:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
+	     for this document can be found on Github.</li>
+      </ul>
+    </section>
+    
+   
+    
+    <section>
+    <h2>Natural Language Processing Interchange Format (NIF)</h2>
+	<p>
+    NIF is an RDF-based format. The classes to represent linguistic data are defined in the <cite><a href="#bib-nifcore">NIF Core Ontology</a></cite> .    All ontology classes are derived from the main class nif:String which respresents strings of Unicode characters.
+	</p>
+	<p>
+    One important subclass of nif:String is nif:Context. It represents a text in its entirety and holds the characters of this text in the nif:isString property. There are several classes (e.g. nif:Word, nif:Phrase, nif:Sentence) for representing partitions of a text, their choice depends on the unit of annotation. All such subunits have a property nif:referenceContext pointing to their respective nif:Context instance.
+    Furthermore, their position inside the context is specified using the nif:beginIndex and nif:endIndex properties. The actual substring represented by these units can be specified using the nif:anchorOf property.
+    Annotations like POS tags or relation types (see below) can be added as properties to the respective nif.String objects.
+	</p>
+	<p>
+	NIF individuals are identified by URIs following a nif:URIScheme which restricts the URI's syntax. E.g. a URI following <cite><a href="#bib-rfc5147">RFC 5147</a></cite> consists of a prefix string followed by „&#35;char=x,y“, where x and y are the start and end positions of the string in its context. For nif:Context URIs y can be omitted or set to the total number of characters in the text.
+	</p>
+	</section>
+
+<section>
+    <h2>Recommended service parameters</h2>
+    NIF services should conform to the <cite><a href="#bib-nifapi"> NIF 2.0 public API specification</a></cite>.    <p> The following parameters are supported by a specification compliant service. ''Required'' parameters need to be specified by the user in order for the service to function. ''Optional'' parameters can be omitted, in which case default values are used by the service. </p>
+    <p>
+    Required:
+    <ul>
+    <li> input (i): The input to be processed by the service. </li>
+    </ul>
+    </p>
+                                        
+    <p>
+    Optional:
+    <ul>
+    <li> informat (f): The format in which the input is given. Supported argument values are text, turtle (default) and json-ld.</li>
+    <li> intype (t): Specifies how the input is retrieved. Supported argument values are direct (default), file and url.</li>
+    <li> outformat (o): The format in which the output will be serialized. Supported argument values are turtle (default) and json-ld.</li>
+    <li> urischeme (u): the URI scheme the service must use to create new URIs.</li>
+    <li> prefix (p): the service must use this as the prefix part of new URIs. A UUID will be generated if no prefix is specified.</li>
+    </ul>
+    </p>
+    
+    <p>
+    Furthermore, we recommend to implement a parameter ''info'' which, according to the NIF API specification can be used to output all implemented parameters if info=true. In addition to that, we recommend to output supported parameters and default values as well.
+    </p>
+    
+    <p>
+    Further recommended parameters, which are not part of the NIF API specification, are the following:
+    <ul>
+    <li> verbosity (v): Accepting two values: true and false. True returns full output in NIF format, while false returns only the triples added to the data. </li>
+    <li> model (m): the path/url of a trained model to be used by the service, a default model should be used if no model is specified. </li>
+    <li> language (l): a parameter specifying the language of the input, default is English. </li>
+    </ul>
+    </p>
+
+</section>
+<section>
+<h2>Log Messages</h2>
+<p>
+NIF services should generate log messages in RDF format using the <a href="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/rlog/rlog.html"> RDF Logging Ontology</a>. An rlog message is of type rlog:entry and should contain the properties rlog:level, rlog:date and rlog:message. </p>
+<p>
+We recommend to generate a log entry in the following cases:
+   <ul>
+  <li> If no input is specified. Log level should be rlog:FATAL. </li>
+  <li> If the input is given as file or url but couldn't be retrieved by the service. Log level should be rlog:FATAL.</li>
+  <li> If a parameter value isn't supported by the service. Log level should be rlog:FATAL.</li>
+  <li> If an optional parameter is omitted. Log level should be rlog:WARN. The message should state the default value being used.</li>
+   </ul>
+</p>
+</section>
+
+<section>
+<h2> Example Implementation </h2>
+<h3>Wrapping the Stanford POS Tagger</h3>
+<p> Our web service wrapping the Stanford POS tagger can be invoked via curl using the following example call.
+<pre >
+curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTagger -­d f="text" -­d i="This is a sample sentence"
+</pre>
+</p>
+<p>
+<p>
+If the input is given as plain text like in the above example, an RDF model is constructed containing a nif:Context element with the input text in its nif:isString property and one nif:Word element for each word in the input.</p>
+
+<p>If the input is already in NIF format, it is expected to contain at least one nif:Context element. Right now, all input elements except the instances of nif:Context, are ignored.</p>
+
+<p>It would be possible to tag instances of nif:Sentence or sets of nif:Word though.</p>
+<p>
+The service then reads the nif:isString values of all nif:Context elements found in the input and passes them to the Stanford NLP tools where they are tokenized and POS tagged. Each word is annotated by adding a nif:posTag property with the POS tag as a literal value to the corresponding nif:Word element. If a nif:Word instance is missing in the input it will be created.</p>
+</p>
+<p>
+The example output of the service can be found here:
+<pre class="example highlight">
+@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1&#35;char=0,4&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "This"^^xsd:string ;
+nif:beginIndex        "0"^^xsd:int ;
+nif:endIndex          "4"^^xsd:int ;
+nif:posTag            "DT"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "is"^^xsd:string ;
+nif:beginIndex        "5"^^xsd:int ;
+nif:endIndex          "7"^^xsd:int ;
+nif:posTag            "VBZ"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt;
+a             nif:Context , nif:RFC5147String , nif:String ;
+nif:isString  "This is a sample sentence"^^xsd:string .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "sample"^^xsd:string ;
+nif:beginIndex        "10"^^xsd:int ;
+nif:endIndex          "16"^^xsd:int ;
+nif:posTag            "NN"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "a"^^xsd:string ;
+nif:beginIndex        "8"^^xsd:int ;
+nif:endIndex          "9"^^xsd:int ;
+nif:posTag            "DT"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=17,25&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "sentence"^^xsd:string ;
+nif:beginIndex        "17"^^xsd:int ;
+nif:endIndex          "25"^^xsd:int ;
+nif:posTag            "NN"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+</pre>
+</p>
+
+<h3>Wrapping the Stanford Parser</h3>
+
+<p>
+Our web service wrapping the Stanford dependency parser can be invoked via curl using the following example call where the input is assumed to be given in a turtle file called input.tll.
+<pre >
+curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParser -d i="input.ttl"</pre>
+</p>
+<p>
+The service can be used to parse input that is already POS tagged.
+<p>I.e. it expects the input to be in NIF format and contain
+<ul>
+<li> at least one nif:Context element </li>
+<li> one nif:Word element for each word in the nif:isString property of its context containing a POS annotation in nif:posTag and the represented string in nif:anchorOf.</li>
+</ul>
+</p>
+<p>The words are ordered by context (using nif:referenceContext) and position (using nif:beginIndex) in order to reconstruct the original texts. The service then passes the annotated input to the Stanford parser. For each dependency relation of the parse a nif:dependency property is added to the relation's head with the URI of the dependent word as object. As a word can only have one head, the type of the relation is annotated in the nif:dependencyRelationType property of the dependent word (as a literal).</p>
+</p>
+<p>
+The example output of the service can be found here:
+<pre class="example highlight">
+@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt;
+a             nif:String , nif:RFC5147String , nif:Context ;
+nif:isString  "This is a sample sentence"^^xsd:string .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
+a                           nif:Word , nif:RFC5147String ;
+nif:anchorOf                "a"^^xsd:string ;
+nif:beginIndex              "8"^^xsd:int ;
+nif:dependencyRelationType  "dep"^^xsd:string ;
+nif:endIndex                "9"^^xsd:int ;
+nif:posTag                  "DT"^^xsd:string ;
+nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt;
+a                           nif:Word , nif:RFC5147String ;
+nif:anchorOf                "sample"^^xsd:string ;
+nif:beginIndex              "10"^^xsd:int ;
+nif:dependencyRelationType  "nn"^^xsd:string ;
+nif:endIndex                "16"^^xsd:int ;
+nif:posTag                  "NN"^^xsd:string ;
+nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,4&gt;
+a                           nif:Word , nif:RFC5147String ;
+nif:anchorOf                "This"^^xsd:string ;
+nif:beginIndex              "0"^^xsd:int ;
+nif:dependencyRelationType  "nsubj"^^xsd:string ;
+nif:endIndex                "4"^^xsd:int ;
+nif:posTag                  "DT"^^xsd:string ;
+nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=17,25 &gt;
+a                     nif:Word , nif:RFC5147String ;
+nif:anchorOf          "sentence"^^xsd:string ;
+nif:beginIndex        "17"^^xsd:int ;
+nif:dependency        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
+                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
+                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=26,27&gt;
+                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,4&gt;
+                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt; ;
+                    
+nif:endIndex          "25"^^xsd:int ;
+nif:posTag            "NN"^^xsd:string ;
+nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+
+&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
+a                           nif:Word , nif:RFC5147String ;
+nif:anchorOf                "is"^^xsd:string ;
+nif:beginIndex              "5"^^xsd:int ;
+nif:dependencyRelationType  "aux"^^xsd:string ;
+nif:endIndex                "7"^^xsd:int ;
+nif:posTag                  "VBZ"^^xsd:string ;
+nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+</pre> </p>
+
+
+<h3>Chaining</h3>
+<p>As one of the services described above (the tagger) produces output the other one (the parser) relies on, they can be used to demonstrate the integration of NIF compliant NLP services.
+</p><p> The following nested call combines both calls from the previous two examples. It invokes the tagger which produces the output of example 1 and passes this POS annotated NIF data to the parser. The output is the same as in Exmple 2.
+<pre>
+curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParser
+-­d i=$(curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTagger -­d f=“text“ -­d i="This is a sample sentence")
+</pre> </p>
+</section>
+
+
+
+<section><h2>References</h2>
+<dt id="bib-rfc5147">[RFC5147]</dt>
+<dd> RFC 5147  URL: <a href="https://tools.ietf.org/html/rfc5147">https://tools.ietf.org/html/rfc5147</a>
+
+
+<dt id="bib-stanfordtagger">[Stanford POS Tagger]</dt>
+<dd> Stanford POS Tagger URL: <a href="http://nlp.stanford.edu/software/tagger.shtml">http://nlp.stanford.edu/software/tagger.shtml</a>
+
+
+<dt id="bib-stanfordparser">[Stanford Parser]</dt>
+<dd> Stanford Parser URL: <a href="http://nlp.stanford.edu/software/lex-parser.shtml">http://nlp.stanford.edu/software/lex-parser.shtml</a>
+
+<dt id="bib-nifcore">[NIF Core Ontology]</dt>
+<dd> NIF Core Ontology URL: <a href="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core.html">http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core.html</a>
+
+
+
+<dt id="bib-nifapi">[NIF 2.0 public API specification]</dt>
+<dd> NIF 2.0 public API specification URL: <a href="http://persistence.uni-leipzig.org/nlp2rdf/specification/api.html">http://persistence.uni-leipzig.org/nlp2rdf/specification/api.html</a>
+
+
+</section>
+
+
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</body>
+</html>
