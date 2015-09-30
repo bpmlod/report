@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LLOD aware services</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css"> 
+	<script src="javascripts/codemirror-compressed.js"></script>
+	<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+	<script src="http://codemirror.net/addon/runmode/runmode.js"></script>
+	<script src="http://codemirror.net/addon/runmode/colorize.js"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+
+          specStatus: "CG-DRAFT",
+          doRDFa: "1.1",
+          shortName:  "llodaware-bpmlod",
+          publishDate:  "2015-09-29",
+          editors: [
+                {   name:       "Philipp Cimiano",
+                    url:        "http://www.cimiano.de",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+                {   name:       "Sebastian Walter",
+                    url:        "http://sebastianwalter.org",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+                {   name:       "Matthias Hartung",
+                    url:        "http://www.cit-ec.de/",
+                    company:    "Cognitive Interaction Technology, Center of Excellence, Bielefeld University",
+                    companyURL: "http://www.cit-ec.de/" },
+          ],
+		  previousMaturity: "FPWD",
+	      previousPublishDate:  "2014-22-07",
+          wg:           "Best Practices for Multilingual Linked Open Data",
+          wgURI:        "http://www.w3.org/community/bpmlod/",
+          wgPublicList: "public-bpmlod",
+//          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+	<link rel="stylesheet" href="stylesheets/codemirror.css">
+    <script src="javascripts/codemirror.js"></script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p> 
+      This document recommends best practices for building Linguistic Linked Open Data (LLOD) aware web services. LLOD denotes the representation of linguistic resources in accordance with linked data principles. These principles include that entities are to be identified by HTTP URIs providing RDF-based information about the entity including links to related entities. LLOD-aware services consume, process and produce such resources.
+      LLOD-aware services are services that consume resources available as Linked Data as Input and output an RDF resource that can in turn be published as Linked Data.
+
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>This document was published by the <a href="http://www.w3.org/community/bpmlod/">Best Practices for Multilingual Linked Open Data</a> community group.
+       It is not a W3C Standard nor is it on the W3C Standards Track.</p>
+      <p>There are a number of ways that one may participate in the development of this report:</p>
+      <ul>
+      <li>Mailing list: <a href="http://lists.w3.org/Archives/Public/public-bpmlod/">public-bpmlod@w3.org</a>
+      <li>Wiki: <a href="https://www.w3.org/community/bpmlod/wiki/Main_Page">Main page</a>
+      <li>More information about meetings of the BPMLOD group can be obtained 
+        <a href="https://www.w3.org/community/bpmlod/wiki/Meetings_of_the_community_group">here</a></li>
+
+	  <li><a href="https://github.com/bpmlod/report">Source code</a> 
+	     for this document can be found on Github.</li>
+      </ul>
+    </section>
+    
+   
+    
+    <section>
+    <h2>Use Case</h2>
+	<p>
+    Assume that we want to develop a service that consumes two terminologies that have been published as linguistic linked data using the guidelines published at <a href=""> placeolder<a/>. The services is invoked by pointing it to two resources and is expected to return a set of links between the two terminological resources indicating which terminological concepts of the two terminologies should be regarded as equivalent. In our example, we will assume that the two terminological resources to be linked are:
+    <ul>
+    <li>The Interactive Terminology of Europe (IATE), available at <a href="http://datahub.io/de/dataset/iate-rdf">DataHub as RDF</a></li>
+    <li>The European Migration Network (EMN) terminology, also available at <a href="http://datahub.io/dataset/emn"> DataHub as RDF</a></li>
+	</ul>
+    </p>
+	</section>
+
+<section>
+    <h2>Recommendations</h2>
+    <p>We recommend building LLOD-aware web services using RESTful interfaces. Each resource provided by a REST-service is given its own URI. HTTP methods operate on resources in the following way:</p>
+    <p>
+    <ul>
+    <li><b>POST</b> asks the service to create/index a new resource available as Linked Data by pointing the service to its DataHub entry for instance</li>
+    <li><b>PUT</b> asks the service to update the index with the new version of a resource</li>
+    <li><b>GET</b> asks to deliver the results of the algorithm implemented by the algorithm</li>
+    </ul>
+    </p>
+    <p>We assume that each LLOD-aware service has a certain persistence layer in which snapshots of LD resources can be stored. This is because downloading resource just-in-time when the algorithm is actually invoked using a GET-method can take too long. Therefore, it is recommended to download and update relevant LD datasets asynchronously. There are multiple possible ways of providing RDF data to a service. For now, we assume that there is RDF-based metadata containing the location of an RDF dump in a <a href="http://www.w3.org/ns/dcat#accessURL"> dcat:accessURL</a> field. This metadata should be the input to the service.</p>
+    
+    <p>Results of the service should be returned in RDF/XML, Turtle-RDF or JSON-LD. Ideally, all three return types would be supported through content negotiation.
+    </p>
+
+</section>
+<section>
+<h2>An example service for linking terminological resources</h2>
+<p>
+Our example service that we have implemented as a proof-of-concept to illustrate the best practice described here induces matches between two terminological resources in RDF and creates links between the associated concepts.</p>
+<p>Terminologies are expected to use the lemon vocabulary for representing lexical resources in RDF. Comparison of entries is performed based on the entries' lemon:writtenRep property. The concepts associated with entries as <a href="http://lemon-model.net/lemon#reference">lemon:reference</a> are regarded as equivalent if the concepts' written representations match. A linking between the concepts is then created using <a href="http://www.w3.org/2009/08/skos-reference/skos.html#exactMatch">skos:exactMatch</a>.</p>
+<p>
+Three basic operations are supported:
+<ol>
+<li>Adding a new resource to the database</li>
+<li>Updating a resource in the database</li>
+<li>Retrieving links between resources in the database</li>
+</ol>
+</p>
+<p>We recommend building web services using a RESTful HTTP interface. The interface for our linking service is described in the following.
+</p>
+<section>
+
+<h3>Adding a new resource to the database</h3>
+<h4>HTTP request</h4>
+A new resource is added by sending a HTTP POST request to
+<pre>
+serviceURL/resource/{resourceURL}
+</pre>
+<ul>
+<li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
+<li>The only serialization format currently supported is Ntriples.</li>
+</ul>
+
+<h4>HTTP response</h4>
+<ul>
+<li>The service returns status code <b>202</b> for a valid request.</li>
+<li>If the database already contains a resource for the given url, the service returns status code <b>400</b>.</li>
+<li>If no valid resource could be found on the given url, the service returns status code <b>422</b>.</li>
+</ul>
+<h4>Example call</h4>
+<p>The call to ask the service to index the IATE dataset would be as follows: <pre> </pre></p>
+<p>Correspondingly, the call to ask the service to index the EMN dataset would be as follows:<pre> </pre></p>
+</section>
+
+<section>
+<h3>Updating a resource in the database</h3>
+<h4>HTTP request</h4>
+An existing resource is updated by sending a HTTP PUT request to
+<pre>
+serviceURL/resource/{resourceURL}
+</pre>
+<ul>
+<li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
+<li>The only serialization format currently supported is Ntriples.</li>
+</ul>
+
+<h4>HTTP response</h4>
+<ul>
+<li>The service returns status code <b>202</b> for a valid request.</li>
+<li>If no valid resource could be found on the given url, the service returns status code <b>422</b>.</li>
+</ul>
+<h4>Example call</h4>
+The call to ask the service to update the current version of the IATE dataset in the index is as follows:
+<pre></pre>
+</section>
+
+
+
+<section>
+<h3>Retrieving links between resources in the database</h3>
+<h4>HTTP request</h4>
+A linking is retrieved by sending a HTTP GET request to
+<pre>
+serviceURL/resource/{resourceURL}
+</pre>
+<ul>
+<li>The optional parameter target can be specified in order to retrieve links to a single target resource. Otherwise, the entire database will be searched for matches.</li>
+<li>The RDF serialization format can be specified by setting the request's Accept header.</li>
+</ul>
+
+<h4>HTTP response</h4>
+<ul>
+<li>The set of generated will be returned in an Ntriples file or any other RDF serialization format if specified by the request.</li>
+<li>If the given resource wasn't found in the index, the service returns status code <b>404</b>.</li>
+</ul>
+<h4>Example call</h4>
+<p>The call to retrieve all the links between IATE and EMN would be as follows:
+<pre></pre></p>
+<p>And would return as result:
+<pre></pre></p>
+</section>
+
+
+</section>
+
+
+
+<script>
+ setTimeout(function(){CodeMirror.colorize();}, 20);
+</script>
+
+</body>
+</html>
