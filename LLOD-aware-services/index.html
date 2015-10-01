@@ -87,7 +87,7 @@
     <ul>
     <li><b>POST</b> asks the service to create/index a new resource available as Linked Data by pointing the service to its DataHub entry for instance</li>
     <li><b>PUT</b> asks the service to update the index with the new version of a resource</li>
-    <li><b>GET</b> asks to deliver the results of the algorithm implemented by the algorithm</li>
+    <li><b>GET</b> asks to deliver the results of the algorithm implemented by the service</li>
     </ul>
     </p>
     <p>We assume that each LLOD-aware service has a certain persistence layer in which snapshots of LD resources can be stored. This is because downloading resource just-in-time when the algorithm is actually invoked using a GET-method can take too long. Therefore, it is recommended to download and update relevant LD datasets asynchronously. There are multiple possible ways of providing RDF data to a service. For now, we assume that there is RDF-based metadata containing the location of an RDF dump in a <a href="http://www.w3.org/ns/dcat#accessURL"> dcat:accessURL</a> field. This metadata should be the input to the service.</p>
