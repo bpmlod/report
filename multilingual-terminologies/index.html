@@ -49,8 +49,7 @@
   <body>
     <section id='abstract'>
       <p> 
-    This document is aimed to guide in the process of creating a Linked Data (LD) version of a lexical resource, in particular IATE TBX. These guidelines contain advice on the vocabularies selection, RDF generation process, and publication of the results. As result, the converted language resource is more interoperable and easily accessible on the Web of Data by means of standard Semantic Web technologies.
-    This document describes the models used and the design decisions taken during the conversion of IATE into the well-known lemon representation. More in general, we will describe common patterns that naturally emerge when converting a lexical resource into RDF format.    
+This document describes proposed best practices for transforming multilingual terminologies, particulary those available in TBX format, into a Linked Data version. The best practices are exemplified using the well-known IATE resource.  The document describes the models and vocabularies to be used and describes the conversion using a running example.
       </p>
     </section>
 
@@ -157,8 +156,10 @@ We have chosen the <a href="http://www.w3.org/ns/lemon/ontolex">lemon-ontolex vo
 The TBX Data Model as an UML diagram.
 </div>
 <p>
+The following list provides an overview of the main elements of a multilingual terminology represented in TBX format.
 <ul>
-	<li><b>TBX Resource</b>: A TBX resource essentially represents a collection of terminological concepts (&ldquo;terminological concepti&rdquo;), which are represented as XML elements of type termEntry and have a unique ID. In the above XML snippet, there is one terminological concept with ID 2151845. Each terminological concept is described by a set of properties, such as a subject field they belong to.</li>
+
+	<li><b>TBX Resource</b>: A TBX resource essentially represents a collection of terminological concepts (&ldquo;terminological concepts&rdquo;), which are represented as XML elements of type termEntry and have a unique ID. In the XML snippet in Section 4.1, there is one terminological concept with ID IATE_84. Each terminological concept is described by a set of properties, such as a subject field they belong to.</li>
 	<li><b>Terminological Concept</b> (term entry): represents a language-independent concept. Each terminological concept is associated to a Langset (see below), which can be seen as a set of language-specific Terms that express the Terminological Concept in question.</li>
 	<li><b>Langset</b>: A langset is a language-specific container for all the terms that lexicalize a &ldquo;terminological concept&rdquo; in a given language. The Langset contains simple terms, for which no decompositions is provided (TIG), as well as complex terms for which the decomposition information is provided (NTIG).</li>
 	<li><b>Term Information Group (TIG)</b>: represents a language-specific term for which no decomposition information is provided.</li>
@@ -176,12 +177,12 @@ For a full specification of the TBX data model, please refer to <cite><a href="#
 </section><section>
 <h4>The lemon-ontolex model</h4>
 <p>
-<p>Lexical resources such as WordNet are one of the most important types of data sources for linguistic research. Such resources are complementary to another type of Web resources that contain a large amount of taxonomic data described in RDF such as DBpedia <span class="citation"></span>. Bridging the gap between these two types of resources means that rich linguistic information found in lexical resources (e.g., lexicons) can be used to describe information on the Web, enabling novel applications such as question answering over Linked Data <span class="citation"></span>. This leads to a new type of resources that is termed <em>ontology-lexicon</em>, which consist of an ontology describing the semantic and taxonomic nature of the domain and a lexicon describing the behaviour of the words in a language.</p>
-<p>In that context <em>lemon</em> (Lexicon Model for Ontologies) <span class="citation"></span> was proposed to provide a ``de facto&quot; standard to be used by a cloud of lexical linked data resources such as WordNet, BabelNet, and UBY <span class="citation"></span> among many others. The <em>lemon</em> model’s core consists of the following elements depicted below:</p>
+<p>Lexical resources such as WordNet are one of the most important types of data sources for linguistic research. Such resources are complementary to another type of Web resources that contain a large amount of taxonomic data described in RDF such as DBpedia <span class="citation"></span>. Bridging the gap between these two types of resources means that rich linguistic information found in lexical resources (e.g., lexicons) can be used to describe information on the Web, enabling novel applications such as question answering over Linked Data <span class="citation"></span>. This leads to a new type of resources that is termed <i>ontology-lexicon</i>, which consists of an ontology describing the semantic and taxonomic nature of the domain and a lexicon describing the behaviour of the words in a language used to refer to the semantics captured by the ontology.</p>
+<p>In that context <em>lemon</em> (Lexicon Model for Ontologies) <span class="citation"></span> was proposed to provide a <em> de facto </em> standard to be used by a cloud of lexical linked data resources such as WordNet, BabelNet, and UBY,  among many others. The <em>lemon</em> model’s core consists of the following elements depicted below:</p>
 <p><img src="lemon-core.png" alt="image" /></p>
 <dl>
     <dt>Lexical Entry.</dt>
-    <dd><p>A lexical entry, which may be a word, multiword expression or even affix, is assumed to represent a single lexical unit with common properties, especially part-of-speech, across all its forms and meanings.</p>
+    <dd><p>A lexical entry, which may be a word, multiword expression or an affix, is assumed to represent a single lexical unit with common properties, especially part-of-speech, across all its forms and meanings.</p>
     </dd>
     <dt>Lexical Form.</dt>
     <dd><p>A form represents a particular version of a lexical entry, for example a plural or some other inflected form. A form may have a number of representations in different orthographies (e.g., spelling variants) or media (e.g., phonetic representations).</p>
@@ -320,8 +321,7 @@ The header is transformed into RDF as follows:
 
   </section><section>
 <h4>Transforming terminological concepts</h4>
-The term entry in lines 14 -18 would be represented in RDF by a <b>skos:Concept</b> in RDF. The Simple Knowledge Organization System (SKOS) is a vocabulary for representing knowledge organization systems (KOS) such as thesauri, classification schemes, subject heading and taxonomies in RDF. 
-The fundamental element of a SKOS vocabulary are <i>concepts</i>, defined as <i>`units of thought, ideas, meanings, or (categories of) objects and events, which underlie many knowledge organization systems'</i>. As terminologies can be seen as a special case of a knowledge organization system, using SKOS concepts to represent terminological concepts seems appropriate.
+The term entry in lines 14 -18 would be represented in RDF by a <b>skos:Concept</b> in RDF. 
 
 </p><p>This is shown by the following RDF snippet, where the the subject field of the terminological concept is specified via the property <i>subjectField</i>:
 </p>
@@ -361,7 +361,7 @@ Mitgliedstaaten</i> and <i>competence of the Member States</i>. The English entr
   ontolex:reference &#160;:IATE_84.
 </textarea>
       <script>CodeMirror.fromTextArea(document.getElementById("example4"), {mode: "text/turtle", lineNumbers: true, readOnly:true});</script><br/>
-<p>Note that the entry specifies the reliability code (i.e. 3), the type of term (i.e. <i>full form</i>), the canonical form (i.e. c<i>ompetence of the member states</i>), and the language (i.e. <i>en</i>. Each lexical entry is assumed to have a <b>LexicalSense</b> that represents the meaning of the entry. In this case the meaning is established by <b>reference</b> to the terminological concept&#160;:IATE_84.
+<p>Note that the entry specifies the reliability code (i.e. 3), the type of term (i.e. <i>full form</i>), the canonical form (i.e. c<i>ompetence of the member states</i>), and the language (i.e. <i>en</i>). Each lexical entry is assumed to have a <i>LexicalSense</i> that represents the meaning of the entry. In this case the meaning is established by <i>reference</i> to the terminological concept&#160;:IATE_84.
 </p><p>We would generate a similar entry for German, which is identified as 
 <i>:Zust\%C3\%A4ndigkeit+\-der\-+Mitgliedstaaten-de</i> and is an entry in the corresponding German lexicon. Note that both entries have a <i>reference</i> to  <i>:IATE_84</i> and are thus cross-lingual equivalents.
 </p>
