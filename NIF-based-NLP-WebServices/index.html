@@ -137,70 +137,145 @@ We recommend to generate a log entry in the following cases:
 <section>
 <h2> Example Implementation </h2>
 <h3>Wrapping the Stanford POS Tagger</h3>
-<p> Our web service wrapping the Stanford POS tagger can be invoked via curl using the following example call.
-<pre >
-curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTagger -­d f="text" -­d i="This is a sample sentence"
+<p> Given the content of a file namend example.ttl
+
+<pre class="example highlight">
+@prefix nif:   &lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#&gt; .
+@prefix xsd:   &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt;
+a             nif:Context , nif:RFC5147String , nif:Sentence ;
+nif:isString  "This is a sample sentence"^^xsd:string .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "This"^^xsd:string ;
+nif:beginIndex        "0"^^xsd:int ;
+nif:endIndex          "4"^^xsd:int ;
+nif:nextWord          &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
+nif:sentence	      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:referenceContext  &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "is"^^xsd:string ;
+nif:beginIndex        "5"^^xsd:int ;
+nif:endIndex          "7"^^xsd:int ;
+nif:nextWord          &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
+nif:previousWord      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt; ;
+nif:sentence	      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:referenceContext  &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "a"^^xsd:string ;
+nif:beginIndex        "8"^^xsd:int ;
+nif:endIndex          "9"^^xsd:int ;
+nif:nextWord          &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
+nif:previousWord      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
+nif:sentence	      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:referenceContext  &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "sample"^^xsd:string ;
+nif:beginIndex        "10"^^xsd:int ;
+nif:endIndex          "16"^^xsd:int ;
+nif:nextWord          &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt; ;
+nif:previousWord      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
+nif:sentence	      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:referenceContext  &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "sentence"^^xsd:string ;
+nif:beginIndex        "17"^^xsd:int ;
+nif:endIndex          "25"^^xsd:int ;
+nif:previousWord      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
+nif:sentence	      &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:referenceContext  &lt;e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+</pre>
+
+our web service wrapping the Stanford POS tagger can be invoked via curl using the following example call.
+<pre>
+curl -G http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTaggerWebService/NifStanfordPOSTagger -d v=true --data-urlencode i="$(&lt;example.ttl)"
 </pre>
 </p>
 <p>
 <p>
-If the input is given as plain text like in the above example, an RDF model is constructed containing a nif:Context element with the input text in its nif:isString property and one nif:Word element for each word in the input.</p>
+<!--If the input is given as plain text like in the above example, an RDF model is constructed containing a nif:Context element with the input text in its nif:isString property and one nif:Word element for each word in the input.</p>
 
 <p>If the input is already in NIF format, it is expected to contain at least one nif:Context element. Right now, all input elements except the instances of nif:Context, are ignored.</p>
 
 <p>It would be possible to tag instances of nif:Sentence or sets of nif:Word though.</p>
 <p>
 The service then reads the nif:isString values of all nif:Context elements found in the input and passes them to the Stanford NLP tools where they are tokenized and POS tagged. Each word is annotated by adding a nif:posTag property with the POS tag as a literal value to the corresponding nif:Word element. If a nif:Word instance is missing in the input it will be created.</p>
+</p>-->
+<p>
+The input is expected to be in NIF format and to contain at least one nif:Context element as well as a set of nif:Word elements. The service reads the nif:anchorOf values of all nif:Words elements belonging to a given nif:Context found in the input and passes them to the Stanford POS tagger. Each word is then annotated by adding a nif:posTag property with the POS tag as a literal value to the nif:Word.
 </p>
 <p>
 The example output of the service can be found here:
 <pre class="example highlight">
-@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd:   &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix nif:   &lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1&#35;char=0,4&gt;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt;
 a                     nif:RFC5147String , nif:Word ;
 nif:anchorOf          "This"^^xsd:string ;
 nif:beginIndex        "0"^^xsd:int ;
 nif:endIndex          "4"^^xsd:int ;
+nif:nextWord          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
 nif:posTag            "DT"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
-a                     nif:RFC5147String , nif:Word ;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt;
+a                     nif:Word , nif:RFC5147String ;
 nif:anchorOf          "is"^^xsd:string ;
 nif:beginIndex        "5"^^xsd:int ;
 nif:endIndex          "7"^^xsd:int ;
+nif:nextWord          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
 nif:posTag            "VBZ"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:previousWord      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt; ;
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt;
-a             nif:Context , nif:RFC5147String , nif:String ;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt;
+a             nif:Context , nif:RFC5147String , nif:Sentence ;
 nif:isString  "This is a sample sentence"^^xsd:string .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt;
 a                     nif:RFC5147String , nif:Word ;
 nif:anchorOf          "sample"^^xsd:string ;
 nif:beginIndex        "10"^^xsd:int ;
 nif:endIndex          "16"^^xsd:int ;
+nif:nextWord          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt; ;
 nif:posTag            "NN"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:previousWord      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
-a                     nif:RFC5147String , nif:Word ;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt;
+a                     nif:Word , nif:RFC5147String ;
 nif:anchorOf          "a"^^xsd:string ;
 nif:beginIndex        "8"^^xsd:int ;
 nif:endIndex          "9"^^xsd:int ;
+nif:nextWord          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
 nif:posTag            "DT"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:previousWord      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=17,25&gt;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt;
 a                     nif:RFC5147String , nif:Word ;
 nif:anchorOf          "sentence"^^xsd:string ;
 nif:beginIndex        "17"^^xsd:int ;
 nif:endIndex          "25"^^xsd:int ;
 nif:posTag            "NN"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:previousWord      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 </pre>
 </p>
 
@@ -208,8 +283,9 @@ nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
 
 <p>
 Our web service wrapping the Stanford dependency parser can be invoked via curl using the following example call where the input is assumed to be given in a turtle file called input.tll.
-<pre >
-curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParser -d i="input.ttl"</pre>
+<pre>
+curl -G http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParserWebService/NifStanfordParser -d v=true --data-urlencode i="$(&lt;input.ttl)"
+</pre>
 </p>
 <p>
 The service can be used to parse input that is already POS tagged.
@@ -222,64 +298,74 @@ The service can be used to parse input that is already POS tagged.
 <p>The words are ordered by context (using nif:referenceContext) and position (using nif:beginIndex) in order to reconstruct the original texts. The service then passes the annotated input to the Stanford parser. For each dependency relation of the parse a nif:dependency property is added to the relation's head with the URI of the dependent word as object. As a word can only have one head, the type of the relation is annotated in the nif:dependencyRelationType property of the dependent word (as a literal).</p>
 </p>
 <p>
-The example output of the service can be found here:
 <pre class="example highlight">
-@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd:   &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix nif:   &lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt;
-a             nif:String , nif:RFC5147String , nif:Context ;
-nif:isString  "This is a sample sentence"^^xsd:string .
-
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
-a                           nif:Word , nif:RFC5147String ;
-nif:anchorOf                "a"^^xsd:string ;
-nif:beginIndex              "8"^^xsd:int ;
-nif:dependencyRelationType  "dep"^^xsd:string ;
-nif:endIndex                "9"^^xsd:int ;
-nif:posTag                  "DT"^^xsd:string ;
-nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
-
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt;
-a                           nif:Word , nif:RFC5147String ;
-nif:anchorOf                "sample"^^xsd:string ;
-nif:beginIndex              "10"^^xsd:int ;
-nif:dependencyRelationType  "nn"^^xsd:string ;
-nif:endIndex                "16"^^xsd:int ;
-nif:posTag                  "NN"^^xsd:string ;
-nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
-
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,4&gt;
-a                           nif:Word , nif:RFC5147String ;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt;
+a                           nif:RFC5147String , nif:Word ;
 nif:anchorOf                "This"^^xsd:string ;
 nif:beginIndex              "0"^^xsd:int ;
 nif:dependencyRelationType  "nsubj"^^xsd:string ;
 nif:endIndex                "4"^^xsd:int ;
+nif:nextWord                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
 nif:posTag                  "DT"^^xsd:string ;
-nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:referenceContext        &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=17,25 &gt;
-a                     nif:Word , nif:RFC5147String ;
-nif:anchorOf          "sentence"^^xsd:string ;
-nif:beginIndex        "17"^^xsd:int ;
-nif:dependency        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=8,9&gt;
-                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
-                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=26,27&gt;
-                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,4&gt;
-                    , &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=10,16&gt; ;
-                    
-nif:endIndex          "25"^^xsd:int ;
-nif:posTag            "NN"^^xsd:string ;
-nif:referenceContext  &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
-
-&lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=5,7&gt;
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt;
 a                           nif:Word , nif:RFC5147String ;
 nif:anchorOf                "is"^^xsd:string ;
 nif:beginIndex              "5"^^xsd:int ;
-nif:dependencyRelationType  "aux"^^xsd:string ;
+nif:dependencyRelationType  "cop"^^xsd:string ;
 nif:endIndex                "7"^^xsd:int ;
+nif:nextWord                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
 nif:posTag                  "VBZ"^^xsd:string ;
-nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&gt; .
+nif:previousWord            &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt; ;
+nif:referenceContext        &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt;
+a             nif:Context , nif:RFC5147String , nif:Sentence ;
+nif:isString  "This is a sample sentence"^^xsd:string .
+
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt;
+a                           nif:RFC5147String , nif:Word ;
+nif:anchorOf                "sample"^^xsd:string ;
+nif:beginIndex              "10"^^xsd:int ;
+nif:dependencyRelationType  "nn"^^xsd:string ;
+nif:endIndex                "16"^^xsd:int ;
+nif:nextWord                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt; ;
+nif:posTag                  "NN"^^xsd:string ;
+nif:previousWord            &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ;
+nif:referenceContext        &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt;
+a                           nif:Word , nif:RFC5147String ;
+nif:anchorOf                "a"^^xsd:string ;
+nif:beginIndex              "8"^^xsd:int ;
+nif:dependencyRelationType  "det"^^xsd:string ;
+nif:endIndex                "9"^^xsd:int ;
+nif:nextWord                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
+nif:posTag                  "DT"^^xsd:string ;
+nif:previousWord            &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
+nif:referenceContext        &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence                &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
+
+&lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=17,25&gt;
+a                     nif:RFC5147String , nif:Word ;
+nif:anchorOf          "sentence"^^xsd:string ;
+nif:beginIndex        "17"^^xsd:int ;
+nif:dependency        &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ,
+                      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=8,9&gt; ,
+                      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,4&gt; ,
+                      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=5,7&gt; ;
+nif:endIndex          "25"^^xsd:int ;
+nif:posTag            "NN"^^xsd:string ;
+nif:previousWord      &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=10,16&gt; ;
+nif:referenceContext  &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; ;
+nif:sentence          &lt;uuid:e899ea51-fb30-4102-8cdd-9d0ec691a0db#char=0,25&gt; .
 </pre> </p>
 
 
@@ -287,8 +373,8 @@ nif:referenceContext        &lt;a3ecec2a-66dc-45af-aa0f-0723138e3de1#char=0,25&g
 <p>As one of the services described above (the tagger) produces output the other one (the parser) relies on, they can be used to demonstrate the integration of NIF compliant NLP services.
 </p><p> The following nested call combines both calls from the previous two examples. It invokes the tagger which produces the output of example 1 and passes this POS annotated NIF data to the parser. The output is the same as in Exmple 2.
 <pre>
-curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParser
--­d i=$(curl http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTagger -­d f=“text“ -­d i="This is a sample sentence")
+curl -G http://sc-lider.techfak.uni-bielefeld.de/NifStanfordPOSTaggerWebService/NifStanfordPOSTagger -d v=true --data-urlencode i="$(&lt;example.ttl)"
+| curl -G http://sc-lider.techfak.uni-bielefeld.de/NifStanfordParserWebService/NifStanfordParser -d v=true --data-urlencode i@-
 </pre> </p>
 </section>
 
