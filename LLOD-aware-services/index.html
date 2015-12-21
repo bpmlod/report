@@ -14,10 +14,10 @@
     <script class='remove'>
       var respecConfig = {
 
-          specStatus: "CG-DRAFT",
+          specStatus: "CG-FINAL",
           doRDFa: "1.1",
           shortName:  "llodaware-bpmlod",
-          publishDate:  "2015-09-29",
+          publishDate:  "2015-12-21",
           editors: [
                 {   name:       "Philipp Cimiano",
                     url:        "http://www.cimiano.de",
@@ -71,25 +71,25 @@
     
     <section>
     <h2>Use Case</h2>
-	<p>
-    Assume that we want to develop a service that consumes two terminologies that have been published as linguistic linked data using the guidelines published at [To be added]. The services is invoked by pointing it to two resources and is expected to return a set of links between the two terminological resources indicating which terminological concepts of the two terminologies should be regarded as equivalent. In our example, we will assume that the two terminological resources to be linked are:
+	
+    Assume that we want to develop a service that consumes two terminologies that have been published as linguistic linked data using the guidelines published at <a href="http://www.w3.org/2015/09/bpmlod-reports/lld-exploitation/">http://www.w3.org/2015/09/bpmlod-reports/lld-exploitation/</a>. The services is invoked by pointing it to two resources and is expected to return a set of links between the two terminological resources indicating which terminological concepts of the two terminologies should be regarded as equivalent. In our example, we will assume that the two terminological resources to be linked are:
     <ul>
     <li>The Interactive Terminology of Europe (IATE), available at <a href="http://datahub.io/de/dataset/iate-rdf">DataHub as RDF</a></li>
     <li>The European Migration Network (EMN) terminology, also available at <a href="http://datahub.io/dataset/emn"> DataHub as RDF</a></li>
 	</ul>
-    </p>
+
 	</section>
 
 <section>
     <h2>Recommendations</h2>
     <p>We recommend building LLOD-aware web services using RESTful interfaces. Each resource provided by a REST-service is given its own URI. HTTP methods operate on resources in the following way:</p>
-    <p>
+    
     <ul>
     <li><b>POST</b> asks the service to create/index a new resource available as Linked Data by pointing the service to its DataHub entry for instance</li>
     <li><b>PUT</b> asks the service to update the index with the new version of a resource</li>
     <li><b>GET</b> asks to deliver the results of the algorithm implemented by the service</li>
     </ul>
-    </p>
+
     <p>We assume that each LLOD-aware service has a certain persistence layer in which snapshots of LD resources can be stored. This is because downloading resource just-in-time when the algorithm is actually invoked using a GET-method can take too long. Therefore, it is recommended to download and update relevant LD datasets asynchronously. There are multiple possible ways of providing RDF data to a service. For now, we assume that there is RDF-based metadata containing the location of an RDF dump in a <a href="http://www.w3.org/ns/dcat#accessURL"> dcat:accessURL</a> field. This metadata should be the input to the service.</p>
     
     <p>Results of the service should be returned in RDF/XML, Turtle-RDF or JSON-LD. Ideally, all three return types would be supported through content negotiation.
@@ -100,15 +100,15 @@
 <h2>An example service for linking terminological resources</h2>
 <p>
 Our example service that we have implemented as a proof-of-concept to illustrate the best practice described here induces matches between two terminological resources in RDF and creates links between the associated concepts.</p>
-<p>Terminologies are expected to use the lemon vocabulary for representing lexical resources in RDF. Comparison of entries is performed based on the entries' lemon:writtenRep property. The concepts associated with entries as <a href="http://lemon-model.net/lemon#reference">lemon:reference</a> are regarded as equivalent if the concepts' written representations match. A linking between the concepts is then created using <a href="http://www.w3.org/2009/08/skos-reference/skos.html#exactMatch">skos:exactMatch</a>.</p>
-<p>
+<p>Terminologies are expected to use the lemon vocabulary for representing lexical resources in RDF. Comparison of entries is performed based on the entries <a href="http://lemon-model.net/lemon#writtenRep">lemon:writtenRep</a> property. The concepts associated with entries as <a href="http://lemon-model.net/lemon#reference">lemon:reference</a> are regarded as equivalent if the concepts written representations match. A linking between the concepts is then created using <a href="http://www.w3.org/2009/08/skos-reference/skos.html#exactMatch">skos:exactMatch</a>.</p>
+
 Three basic operations are supported:
 <ol>
 <li>Adding a new resource to the database</li>
 <li>Updating a resource in the database</li>
 <li>Retrieving links between resources in the database</li>
 </ol>
-</p>
+
 <p>We recommend building web services using a RESTful HTTP interface. The interface for our linking service is described in the following.
 </p>
 <section>
@@ -117,7 +117,7 @@ Three basic operations are supported:
 <h4>HTTP request</h4>
 A new resource is added by sending a HTTP POST request to
 <pre>
-serviceURL/resource/{resourceURL}
+http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/{resourceURL}
 </pre>
 <ul>
 <li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
@@ -131,8 +131,10 @@ serviceURL/resource/{resourceURL}
 <li>If no valid resource could be found on the given url, the service returns status code <b>422</b>.</li>
 </ul>
 <h4>Example call</h4>
-<p>The call to ask the service to index the IATE dataset would be as follows: <pre>To be added</pre></p>
-<p>Correspondingly, the call to ask the service to index the EMN dataset would be as follows:<pre>To be added</pre></p>
+
+Correspondingly, the call to ask the service to index the EMN dataset would be as follows:
+<pre>POST http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/http://datahub.io/dataset/emn</pre>
+<small>Note: Support for this operation is deactivated.</small>
 </section>
 
 <section>
@@ -140,7 +142,7 @@ serviceURL/resource/{resourceURL}
 <h4>HTTP request</h4>
 An existing resource is updated by sending a HTTP PUT request to
 <pre>
-serviceURL/resource/{resourceURL}
+http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/{resourceURL}
 </pre>
 <ul>
 <li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
@@ -154,7 +156,8 @@ serviceURL/resource/{resourceURL}
 </ul>
 <h4>Example call</h4>
 The call to ask the service to update the current version of the IATE dataset in the index is as follows:
-<pre>To be added</pre>
+<pre>PUT http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/http://datahub.io/dataset/iate-rdf</pre>
+<small>Note: Support for this operation is deactivated.</small>
 </section>
 
 
@@ -162,26 +165,49 @@ The call to ask the service to update the current version of the IATE dataset in
 <section>
 <h3>Retrieving links between resources in the database</h3>
 <h4>HTTP request</h4>
-A linking is retrieved by sending a HTTP GET request to
+A linking for all concepts in a dataset is retrieved by sending a HTTP GET request to
 <pre>
-serviceURL/resource/{resourceURL}
+http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/linking/dataset/{sourceURL}?target={targetURL}
 </pre>
+
+A linking for a single concept is retrieved by sending a HTTP GET request to
+<pre>http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/linking/concept/{sourceURL}?target={targetURL}
+</pre>
+
 <ul>
 <li>The optional parameter target can be specified in order to retrieve links to a single target resource. Otherwise, the entire database will be searched for matches.</li>
-<li>The RDF serialization format can be specified by setting the request's Accept header.</li>
+<li>The RDF serialization format can be specified by setting the requests Accept header.</li>
 </ul>
 
 <h4>HTTP response</h4>
 <ul>
 <li>The set of generated will be returned in an Ntriples file or any other RDF serialization format if specified by the request.</li>
-<li>If the given resource wasn't found in the index, the service returns status code <b>404</b>.</li>
+<li>If the given resource was not found in the index, the service returns status code <b>404</b>.</li>
 </ul>
 <h4>Example call</h4>
-<p>The call to retrieve all the links between IATE and EMN would be as follows:
-<pre>To be added</pre></p>
-<p>And would return as result:
-<pre>To be added</pre></p>
+The call to retrieve all the links between IATE and EMN would be as follows:
+<pre>GET http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/linking/dataset/https://datahub.io/dataset/emn?target=https://datahub.io/dataset/iate-rdf
+</pre>
+And would return as result:
+<pre class="example highlight">
+
+
+<i>european_migration_network:</i>absconding                <i>skos:</i>exactMatch  <i>iate:IATE-3544259</i> .
+<i>european_migration_network:</i>accommodationcentre       <i>skos:</i>exactMatch  <i>iate:IATE-878245</i> .
+<i>european_migration_network:</i>acquisitionofcitizenship  <i>skos:</i>exactMatch  <i>iate:IATE-3549121</i> .
+<i>european_migration_network:</i>actofpersecution          <i>skos:</i>exactMatch  <i>iate:IATE-3549123</i> .
+<i>european_migration_network:</i>actorofprotection         <i>skos:</i>exactMatch  <i>iate:IATE-3549124</i> .
+…
+</pre>
+where
+<ul>
+<li><i>european_migration_network:</i> stands for <a href="http://ec.europa.eu/dgs/home-affairs/what-we-do/networks/european_migration_network/glossary/index_a_en.htm">http://ec.europa.eu/dgs/home-affairs/what-we-do/networks/european_migration_network/glossary/index_a_en.htm#</a></li>
+<li><i>skos:</i> stands for <a href="http://www.w3.org/2004/02/skos/core#">http://www.w3.org/2004/02/skos/core#</a>
+<li><i>iate:</i> stands for <a href="http://tbx2rdf.lider-project.eu/data/iate">http://tbx2rdf.lider-project.eu/data/iate/</a>
+</ul>
+<small>Note: N-Triples is the only output format currently supported by our implementation.</small>
 </section>
+
 
 
 </section>
