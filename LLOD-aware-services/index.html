@@ -14,7 +14,7 @@
     <script class='remove'>
       var respecConfig = {
 
-          specStatus: "CG-DRAFT",
+          specStatus: "CG-FINAL",
           doRDFa: "1.1",
           shortName:  "llodaware-bpmlod",
           publishDate:  "2015-12-21",
@@ -90,7 +90,7 @@
     <li><b>GET</b> asks to deliver the results of the algorithm implemented by the service</li>
     </ul>
 
-    <p>We assume that each LLOD-aware service has a certain persistence layer in which snapshots of LD resources can be stored. This is because downloading resource just-in-time when the algorithm is actually invoked using a GET-method can take too long. Therefore, it is recommended to download and update relevant LD datasets asynchronously. There are multiple possible ways of providing RDF data to a service. For now, we assume that there is RDF-based metadata containing the location of an RDF dump in a <a href="http://www.w3.org/ns/dcat#accessURL"> dcat:accessURL</a> field. This metadata should be the input to the service.</p>
+    <p>We assume that each LLOD-aware service has a certain persistence layer in which snapshots of LD resources can be stored. This is because downloading resource just-in-time when the algorithm is actually invoked using a GET-method can take too long. Therefore, it is recommended to download and update relevant LD datasets asynchronously. There are multiple possible ways of providing RDF data to a service. For now, we assume that there is RDF-based metadata containing the location of an RDF dump in a http://www.w3.org/ns/dcat#accessURL field. This metadata should be the input to the service.</p>
     
     <p>Results of the service should be returned in RDF/XML, Turtle-RDF or JSON-LD. Ideally, all three return types would be supported through content negotiation.
     </p>
@@ -120,7 +120,7 @@ A new resource is added by sending a HTTP POST request to
 http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/{resourceURL}
 </pre>
 <ul>
-<li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
+<li>{resourceURL} needs to point to RDF metadata giving the resource location as http://www.w3.org/ns/dcat#accessURL </li>
 <li>The only serialization format currently supported is Ntriples.</li>
 </ul>
 
@@ -145,7 +145,7 @@ An existing resource is updated by sending a HTTP PUT request to
 http://sc-lider.techfak.uni-bielefeld.de/LinkingWebService/resource/{resourceURL}
 </pre>
 <ul>
-<li>{resourceURL} needs to point to RDF metadata giving the resource location as <a href="http://www.w3.org/ns/dcat#accessURL">dcat:accessURL</a></li>
+<li>{resourceURL} needs to point to RDF metadata giving the resource location as http://www.w3.org/ns/dcat#accessURL </li>
 <li>The only serialization format currently supported is Ntriples.</li>
 </ul>
 
@@ -202,7 +202,7 @@ And would return as result:
 where
 <ul>
 <li><i>european_migration_network:</i> stands for <a href="http://ec.europa.eu/dgs/home-affairs/what-we-do/networks/european_migration_network/glossary/index_a_en.htm">http://ec.europa.eu/dgs/home-affairs/what-we-do/networks/european_migration_network/glossary/index_a_en.htm#</a></li>
-<li><i>skos:</i> stands for <a href="http://www.w3.org/2004/02/skos/core#">http://www.w3.org/2004/02/skos/core#</a>
+<li><i>skos:</i> stands for <a href="http://www.w3.org/2009/08/skos-reference/skos.html">http://www.w3.org/2004/02/skos/core#</a>
 <li><i>iate:</i> stands for <a href="http://tbx2rdf.lider-project.eu/data/iate">http://tbx2rdf.lider-project.eu/data/iate/</a>
 </ul>
 <small>Note: N-Triples is the only output format currently supported by our implementation.</small>
